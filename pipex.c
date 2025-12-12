@@ -6,7 +6,7 @@
 /*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/12 18:42:27 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/12 18:58:49 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	main(int argc, char **argv, char **envp)
 		// close writing end of pipe
 		close(fd[1]);
 		// 0. open outfile
-		fd_outfile = open(argv[4], O_WRONLY);
+		fd_outfile = open(argv[4], O_WRONLY, 0644);
 		if (fd_outfile < 0)
 			error_exit("Error\noutfile could not be opened", -1);
 		// 1. redirect standard input of cmd2 to the read end of the pipe
