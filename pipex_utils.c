@@ -6,7 +6,7 @@
 /*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/12 18:34:42 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/12 19:33:18 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ char	*extract_pathvar_from_envp(char **envp)
 			return (envp[i] + 5);
 		i++;
 	}
+    error_exit("PATH variable not found in ENV variable", 2);
 	return (NULL);
 }
 
@@ -123,40 +124,3 @@ void	free_2d(char **strs)
 	}
 	free(strs);
 }
-
-void	error_exit(char *error_msg, int status)
-{
-	// ft_printf("Error\n%s\n", error_msg);
-	perror(error_msg);
-	exit(status);
-}
-
-/* char    *substr_until_char(char *s, char c)
-{
-	char	*pos;
-
-	pos = ft_strchr(s, c);
-	if (!pos)
-		return (s);
-	return (ft_substr(s, 0, pos - s));
-}
-
-char	*substr_char_until_end(char *s, char c)
-{
-	char	*pos;
-
-	pos = ft_strchr(s, c);
-	if (!pos)
-		return (NULL);
-	return (ft_substr(s, pos - s + 1, ft_strlen(s)));
-}
-
-int main (void)
-{
-	char	*str;
-
-	str = "hallo 12";
-	printf("erster teil: %s\n", substr_until_char(str, ' '));
-	printf("zweiter teil: %s\n", substr_char_until_end(str, ' '));
-}
- */

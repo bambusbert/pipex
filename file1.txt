@@ -9,3 +9,6 @@ PING google.com (142.250.180.142) 56(84) bytes of data.
 5 packets transmitted, 5 received, 0% packet loss, time 4007ms
 rtt min/avg/max/mdev = 10.690/12.939/21.517/4.289 ms
 rtt min/avg/max/mdev = 10.690/12.939/21.517/4.289 ms
+rtt min/avg/max/mdev = 10.690/12.939/21.517/4.289 ms
+rtt min/avg/max/mdev = 10.690/12.939/21.517/4.289 ms
+rtt min/avg/max/mdev = 10.690/12.939/21.517/4.289 ms
