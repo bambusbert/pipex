@@ -6,7 +6,7 @@
 #    By: slambert <slambert@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/11 13:28:23 by slambert          #+#    #+#              #
-#    Updated: 2025/12/12 13:26:41 by slambert         ###   ########.fr        #
+#    Updated: 2025/12/12 14:47:00 by slambert         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -18,7 +18,8 @@ OBJS = ${SRC:.c=.o}
 
 CC = cc
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror -g
+#CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -g
 INCLUDE = -I .
 
 LIBFT_PATH = libft
