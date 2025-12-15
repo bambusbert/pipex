@@ -3,18 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/12 19:23:19 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/15 16:38:36 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include <sys/wait.h>
 #include <unistd.h>
+#include <errno.h>
+#include <stdio.h> //TODO remove
 
-void	do_execve_stuff(char *str, char **envp);
+void     do_execve_stuff(char *str, char **envp);
 char	*extract_pathvar_from_envp(char **envp);
 char	*extract_path_from_pathvar(char *path_var, char *cmd);
 void	free_2d(char **strs);

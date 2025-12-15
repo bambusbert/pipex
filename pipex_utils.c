@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/12 19:33:18 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/15 18:24:02 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 #include <stdio.h>
 
-/*    
+/*
 execve needs 3 variables,
 var1:  char* path: the path where the specific program is stored
 var2: char* argv[]: contains the program to be launched and its flags
-    		argv[0]: command (e.g. grep)
-	    	argv[1]: flag 1
-		    argv[2]: flag 2*
-		    argv[n]: flag n
-		    argv[n+1]: NULL
+			argv[0]: command (e.g. grep)
+			argv[1]: flag 1
+			argv[2]: flag 2*
+			argv[n]: flag n
+			argv[n+1]: NULL
 var3: envp: thats an array of string pointing to the environment paths.
 this variable gets set automatically from main and is passed through*/
 void	do_execve_stuff(char *str, char **envp)
@@ -34,8 +34,11 @@ void	do_execve_stuff(char *str, char **envp)
 	strs = ft_split(str, ' ');
 	path = extract_path_from_pathvar(path_var, strs[0]);
 	if (!path)
-		error_exit("Error\nextract_path_from_pathvar returned NULL", -1);
-	dprintf(STDERR_FILENO, "the correct path for '%s' is %s\n", strs[0], path);
+	{
+		free_2d(strs);
+		error_exit("Error\nextract_path_from_pathvar returned NULL", 127);
+	}
+		
 	execve(path, strs, envp);
 }
 
@@ -50,7 +53,7 @@ char	*extract_pathvar_from_envp(char **envp)
 			return (envp[i] + 5);
 		i++;
 	}
-    error_exit("PATH variable not found in ENV variable", 2);
+	error_exit("PATH variable not found in ENV variable", 2);
 	return (NULL);
 }
 

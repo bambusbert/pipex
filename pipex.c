@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/12 19:33:38 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/15 18:16:53 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	main(int argc, char **argv, char **envp)
 	int	pid2;
 	int	fd_infile;
 	int	fd_outfile;
+	int status;
 
 	if (argc != 5)
 		return (1);
@@ -42,8 +43,31 @@ int	main(int argc, char **argv, char **envp)
 	close(fd[0]);
 	close(fd[1]);
 	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
-	return (0);
+	waitpid(pid2, &status, 0);
+	//#define WEXITSTATUS(status) (((status) >> 8) & 0xFF)
+	//return (WEXITSTATUS(status));
+	//TODO abhängig davon ob gekillt wurde (WIFEXITED):
+/* 	 if (WIFEXITED(status)) {
+    // Child exited normally (grep with no matches, etc.)
+    return (WEXITSTATUS(status));  // Returns 1 for grep no matches
+} 
+else if (WIFSIGNALED(status)) {
+    // Child was killed by signal (SIGSEGV, SIGKILL, etc.)
+    // Shell convention: return 128 + signal number
+    return (128 + WTERMSIG(status));
+}
+else {
+    // Some other case (stopped, continued, etc.)
+    return (1);
+} */
+	return (((status) >> 8) & 0xFF);
+	
+	//return (WEXITSTATUS(status));
+/* 	in the variable status there are actually 2 things stored
+	1. first 0-7 bits: signal number - ONLY IF KILLED
+	2. bits 8-31: exit code / signal - if exited normally
+	(3. bits 32-64: other stuff like how the process was terminated)
+	--> we have to shift bits 8-31 down by 8 bits */
 }
 
 /* child process 1, cmd1
@@ -57,15 +81,17 @@ to test if that stuff works just comment out this line (output goes into stdout)
 X. close fds that are not used and pipe ends */
 void	child_cmd_1(int *fd, int *fd_infile, char **argv, char **envp)
 {
+	//dprintf(2, "I AM CHILD 1\n");
 	close(fd[0]);
 	*fd_infile = open(argv[1], O_RDONLY);
 	if (*fd_infile < 0)
-		error_exit("Error\ninfile could not be opened", -1);
+		error_exit("Error\ninfile could not be opened", 1);
 	dup2(*fd_infile, STDIN_FILENO);
 	dup2(fd[1], STDOUT_FILENO);
 	do_execve_stuff(argv[2], envp);
-	close(*fd_infile);
-	close(fd[1]);
+	//on success execve does not return!
+	// close(*fd_infile);
+	// close(fd[1]);
 }
 
 /* child process 2 - cmd2
@@ -78,15 +104,21 @@ close writing end of pipe
 X. close fds that are not used and pipe ends */
 void	child_cmd_2(int *fd, int *fd_outfile, char **argv, char **envp)
 {
+	dprintf(2, "I AM CHILD 2\n");
 	close(fd[1]);
-	*fd_outfile = open(argv[4], O_WRONLY | O_CREAT, 0644);
+	*fd_outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (*fd_outfile < 0)
-		error_exit("Error\noutfile could not be opened", -1);
+		error_exit("Error\noutfile could not be opened", 1);
 	dup2(fd[0], STDIN_FILENO);
 	dup2(*fd_outfile, STDOUT_FILENO);
 	do_execve_stuff(argv[3], envp);
-	close(*fd_outfile);
-	close(fd[0]);
+	//on success execve does not return!
+	dprintf(2, "will we ever get here or no?\n");
+	//errno = 1;
+	// dprinf(2, "ret is %d\n", ret);
+	// close(*fd_outfile);
+	// close(fd[0]); 
+	// exit(ret);
 }
 
 void	error_exit(char *error_msg, int status)

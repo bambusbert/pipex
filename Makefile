@@ -1,14 +1,14 @@
-#******************************************************************************#
+# **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: slambert <slambert@student.42.fr>          +#+  +:+       +#+         #
+#    By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/11 13:28:23 by slambert          #+#    #+#              #
-#    Updated: 2025/12/12 14:47:00 by slambert         ###   ########.fr        #
+#    Updated: 2025/12/15 14:14:19 by slambert         ###   ########.fr        #
 #                                                                              #
-#******************************************************************************#
+# **************************************************************************** #
 
 NAME = pipex
 
@@ -18,8 +18,8 @@ OBJS = ${SRC:.c=.o}
 
 CC = cc
 RM = rm -f
-#CFLAGS = -Wall -Wextra -Werror -g
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -Wall -Wextra -Werror -g
+#CFLAGS = -Wall -Wextra -g
 INCLUDE = -I .
 
 LIBFT_PATH = libft
