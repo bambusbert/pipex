@@ -6,12 +6,11 @@
 /*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/16 17:01:18 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/16 17:54:40 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
 
 /* argv[1] = file1
 argv[2] = cmd1
@@ -67,18 +66,19 @@ int	main(int argc, char **argv, char **envp)
 		2. bits 8-31: exit code / signal - if exited normally
 		(3. bits 32-64: other stuff like how the process was terminated)
 		--> we have to shift bits 8-31 down by 8 bits */
-/* 	if (WIFEXITED(status))
-	{
-		return (WEXITSTATUS(status));
-	}
-	else if (WIFSIGNALED(status))
-	{
-		return (128 + WTERMSIG(status)); // Shell convention for signal deaths
-	}
-	else
-	{
-		return (1); // Fallback
-	} */
+		// if (WIFEXITED(status))
+		// {
+		// 	return (WEXITSTATUS(status));
+		// }
+		// else if (WIFSIGNALED(status))
+		// {
+		// 	return (128 + WTERMSIG(status));
+		// 		// Shell convention for signal deaths
+		// }
+		// else
+		// {
+		// 	return (1); // Fallback
+		// }
 }
 
 /* child process 1, cmd1
@@ -98,7 +98,7 @@ void	child_cmd_1(int *fd, int *fd_infile, char **argv, char **envp)
 		error_exit("infile could not be opened\n", EXIT_FAILURE);
 	if (dup2(*fd_infile, STDIN_FILENO) < 0)
 		error_exit("dup2 failed in child_cmd1\n", EXIT_FAILURE);
-	if(dup2(fd[1], STDOUT_FILENO) < 0)
+	if (dup2(fd[1], STDOUT_FILENO) < 0)
 		error_exit("dup2 failed in child_cmd1\n", EXIT_FAILURE);
 	close(*fd_infile);
 	close(fd[1]);
@@ -132,9 +132,7 @@ void	child_cmd_2(int *fd, int *fd_outfile, char **argv, char **envp)
 
 void	error_exit(char *error_msg, int status)
 {
-	// ft_putstr_fd(error_msg, 2);
-	// ft_putstr_fd("\n", 2);
-	(void) status;
+	(void)status;
 	perror(error_msg);
 	exit(status);
 }
@@ -142,7 +140,6 @@ void	error_exit(char *error_msg, int status)
 void	error_exit2(char *error_msg, int status)
 {
 	printf("%s\n", error_msg);
-	
 	strerror(errno);
 	exit(status);
 }

@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/16 17:01:39 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/16 18:15:45 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,16 @@ void	do_execve_stuff(char *str, char **envp)
 		free_2d(strs);
 		error_exit("Error in do_execve_stuff\n", 127);
 	}
-
 	execve(path, strs, envp);
+	free(path);
+	free_2d(strs);
+	error_exit("execve failed\n", 1);
 }
 
 char	*extract_pathvar_from_envp(char **envp)
 {
 	int	i;
-
+		
 	i = 0;
 	while (envp[i])
 	{
@@ -59,7 +61,7 @@ char	*extract_pathvar_from_envp(char **envp)
 			return (envp[i] + 5);
 		i++;
 	}
-	//dprintf(2, "path is '%s'\n", envp[i + 5]);
+	// dprintf(2, "path is '%s'\n", envp[i + 5]);
 	error_exit("PATH variable not found in ENV variable\n", EXIT_FAILURE);
 	return (NULL);
 }
@@ -74,13 +76,16 @@ char	*extract_path_from_pathvar(char *path_var, char *cmd)
 
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, X_OK) == 0)
-			return (ft_strdup(cmd));
-		return (NULL);
+		if (access(cmd, F_OK) == -1)
+			error_exit("command not found\n", 127);
+		if (access(cmd, X_OK) == -1)
+			error_exit("command not executable\n", 126);
+		return (ft_strdup(cmd));
 	}
 	paths = ft_split(path_var, ':');
 	if (!paths)
-		error_exit("error in extract_path_from_pathvar, ft_split failed\n", EXIT_FAILURE);
+		error_exit("error in extract_path_from_pathvar, ft_split failed\n",
+			EXIT_FAILURE);
 	i = 0;
 	while (paths[i])
 	{
@@ -103,14 +108,16 @@ char	*check_single_path(char *path, char **paths, char *cmd)
 	if (!path_with_slash)
 	{
 		free_2d(paths);
-		error_exit("error in extract_path_from_pathvar, ft_strjoin failed\n", 1);
+		error_exit("error in extract_path_from_pathvar, ft_strjoin failed\n",
+			EXIT_FAILURE);
 	}
 	path_to_check = ft_strjoin(path_with_slash, cmd);
 	free(path_with_slash);
 	if (!path_to_check)
 	{
 		free_2d(paths);
-		error_exit("error in extract_path_from_pathvar, ft_strjoin failed\n", 1);
+		error_exit("error in extract_path_from_pathvar, ft_strjoin failed\n",
+			EXIT_FAILURE);
 	}
 	if (access(path_to_check, X_OK) == 0)
 	{
@@ -138,7 +145,7 @@ void	free_2d(char **strs)
 
 int	is_empty(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -147,7 +154,7 @@ int	is_empty(char *str)
 			|| str[i] == '\f' || str[i] == '\v')
 			i++;
 		else
-			return 0;
+			return (0);
 	}
 	return (1);
 }
