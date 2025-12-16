@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/15 18:35:25 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/16 12:50:58 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,19 @@ void	do_execve_stuff(char *str, char **envp)
 
 	path_var = extract_pathvar_from_envp(envp);
 	strs = ft_split(str, ' ');
+	
+	if (!strs[0])
+	{
+		free_2d(strs);
+		exit(1);
+	}
+	//dprintf(2, "cmd is '%s'\n", strs[0]);
 	path = extract_path_from_pathvar(path_var, strs[0]);
 	if (!path)
 	{
 		free_2d(strs);
 		error_exit("Error\nextract_path_from_pathvar returned NULL", 127);
 	}
-		
 	execve(path, strs, envp);
 }
 
@@ -54,6 +60,7 @@ char	*extract_pathvar_from_envp(char **envp)
 			return (envp[i] + 5);
 		i++;
 	}
+	dprintf(2, "path is '%s'\n", envp[i+5]);
 	error_exit("PATH variable not found in ENV variable", 2);
 	return (NULL);
 }

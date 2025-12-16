@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/15 19:06:28 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/16 12:45:00 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,17 +92,18 @@ to test if that stuff works just comment out this line (output goes into stdout)
 X. close fds that are not used and pipe ends */
 void	child_cmd_1(int *fd, int *fd_infile, char **argv, char **envp)
 {
-	// dprintf(2, "I AM CHILD 1\n");
 	close(fd[0]);
 	*fd_infile = open(argv[1], O_RDONLY);
 	if (*fd_infile < 0)
 		error_exit("Error\ninfile could not be opened", 1);
-	dup2(*fd_infile, STDIN_FILENO);
-	dup2(fd[1], STDOUT_FILENO);
+	if (dup2(*fd_infile, STDIN_FILENO) < 0)
+		error_exit("Error\ndup2 failed in child_cmd1\n", 1);
+	if(dup2(fd[1], STDOUT_FILENO) < 0)
+		error_exit("Error\ndup2 failed in child_cmd1\n", 1);
+	close(*fd_infile);
+	close(fd[1]);
 	do_execve_stuff(argv[2], envp);
-	// on success execve does not return!
-	// close(*fd_infile);
-	// close(fd[1]);
+	error_exit("Error\ncmd1 failed\n", 1);
 }
 
 /* child process 2 - cmd2
@@ -115,20 +116,18 @@ close writing end of pipe
 X. close fds that are not used and pipe ends */
 void	child_cmd_2(int *fd, int *fd_outfile, char **argv, char **envp)
 {
-	// dprintf(2, "I AM CHILD 2\n");
 	close(fd[1]);
 	*fd_outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (*fd_outfile < 0)
 		error_exit("Error\noutfile could not be opened", 1);
-	dup2(fd[0], STDIN_FILENO);
-	dup2(*fd_outfile, STDOUT_FILENO);
+	if (dup2(fd[0], STDIN_FILENO) < 0)
+		error_exit("Error\ndup2 failed in child_cmd2\n", 1);
+	if (dup2(*fd_outfile, STDOUT_FILENO) < 0)
+		error_exit("Error\ndup2 failed in child_cmd2\n", 1);
+	close(*fd_outfile);
+	close(fd[0]);
 	do_execve_stuff(argv[3], envp);
-	// on success execve does not return!
-	dprintf(2, "will we ever get here or no?\n");
-	// dprintf(2, "ret is %d\n", ret);
-	// close(*fd_outfile);
-	// close(fd[0]);
-	// exit(ret);
+	error_exit("Error\ncmd2 failed\n", 1);
 }
 
 void	error_exit(char *error_msg, int status)
