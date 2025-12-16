@@ -6,21 +6,24 @@
 /*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/15 16:38:36 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/16 16:54:20 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
-#include <sys/wait.h>
-#include <unistd.h>
 #include <errno.h>
 #include <stdio.h> //TODO remove
+#include <sys/wait.h>
+#include <unistd.h>
+#include <string.h>
 
-void     do_execve_stuff(char *str, char **envp);
+void	do_execve_stuff(char *str, char **envp);
 char	*extract_pathvar_from_envp(char **envp);
 char	*extract_path_from_pathvar(char *path_var, char *cmd);
 void	free_2d(char **strs);
 void	error_exit(char *error_msg, int status);
+void	error_exit2(char *error_msg, int status);
 char	*check_single_path(char *path, char **paths, char *cmd);
 void	child_cmd_1(int *fd, int *fd_infile, char **argv, char **envp);
 void	child_cmd_2(int *fd, int *fd_outfile, char **argv, char **envp);
+int		is_empty(char *str);
