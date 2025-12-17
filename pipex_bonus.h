@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 20:30:40 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 20:47:27 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,32 +22,35 @@
 
 typedef struct s_pipex
 {
-    int argc;
-    int fd_infile;
-    int fd_outfile;
-    int cmd_count;
-    //int pid1;   //will be replaced by *pid (points to an array with size cmd_count)
-    //int pid2;   //will be replaced by *pid (points to an array with size cmd_count)
-    int *pid;
-    //int fd[2];  //wll be replaced by **pipes (size: [cmd_count - 1][2]
-    int **pipes;
-    char **argv;
-    char **envp;
-}   t_pipex;
+	int		argc;
+	int		fd_infile;
+	int		fd_outfile;
+	int		cmd_count;
+	// int pid1;  
+		//will be replaced by *pid (points to an array with size cmd_count)
+	// int pid2;  
+		//will be replaced by *pid (points to an array with size cmd_count)
+	int		*pid;
+	// int fd[2];  //wll be replaced by **pipes (size: [cmd_count - 1][2]
+	int		**pipes;
+	char	**argv;
+	char	**envp;
+}			t_pipex;
 
-void    init_struct (t_pipex *pipex, int argc, char **argv, char **envp);
-void	do_execve_stuff(char *str, char **envp);
-char	*extract_pathvar_from_envp(char **envp);
-char	*extract_path_from_pathvar(char *path_var, char **strs);
-void	free_2d(char **strs);
-void	error_exit(char *error_msg, int status);
-char	*check_single_path(char *path, char **paths, char *cmd);
-void	child_cmd_1(t_pipex *pipex);
-void	child_cmd_2(t_pipex *pipex);
-int		is_empty(char *str);
-char	*absolute_path_helper(char **strs);
-void	clean_exit(char *msg, int *p_fd, int file_fd);
-int		return_handler(int pid1, int pid2);
-void	custom_error(char *msg, int status);
+void		init_struct(t_pipex *pipex, int argc, char **argv, char **envp);
+void		do_execve_stuff(char *str, char **envp);
+char		*extract_pathvar_from_envp(char **envp);
+char		*extract_path_from_pathvar(char *path_var, char **strs);
+void		free_2d(char **strs);
+void		error_exit(char *error_msg, int status);
+char		*check_single_path(char *path, char **paths, char *cmd);
+void		child_cmd_first(t_pipex *pipex);
+void		child_cmd_last(t_pipex *pipex);
+void		child(t_pipex *pipex, int cmd_count);
+int			is_empty(char *str);
+char		*absolute_path_helper(char **strs);
+void		clean_exit(char *msg, int *p_fd, int file_fd);
+int			return_handler(int pid1, int pid2);
+void		custom_error(char *msg, int status);
 
 #endif

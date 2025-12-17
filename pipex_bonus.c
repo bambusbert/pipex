@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 20:37:39 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 20:59:37 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_pipex pipex;
 	
-	if (argc <= 5)
+	if (argc < 5)
 		custom_error("wrong input. Correct Input: ./pipex <file1> <cmd1> <cmd2> ... <cmd_n> <file2>", EXIT_FAILURE);
 	init_struct(&pipex, argc, argv, envp);
 	if (pipe(pipex.pipes[0]) == -1)
@@ -30,15 +30,36 @@ int	main(int argc, char **argv, char **envp)
 	if (pipex.pid[0] < 0)
 		clean_exit("first fork failed", pipex.pipes[0], -1);
 	if (pipex.pid[0] == 0)
-		child_cmd_1(&pipex);
+		child(&pipex, 1);
+
+
+		
 	pipex.pid[1] = fork();
 	if (pipex.pid[1] < 0)
 		clean_exit("second fork failed", pipex.pipes[0], -1);
 	if (pipex.pid[1] == 0)
-		child_cmd_2(&pipex);
+		child(&pipex, pipex.cmd_count);
 	close(pipex.pipes[0][0]);
 	close(pipex.pipes[0][1]);
 	return return_handler (pipex.pid[0], pipex.pid[1]);
+}
+
+void child (t_pipex *pipex, int cmd_count)
+{
+	if (cmd_count == 1)
+	{
+		//1. cmd
+		child_cmd_first(pipex);
+	}
+	else if (cmd_count == pipex->cmd_count)
+	{
+		//last cmd	
+		child_cmd_last(pipex);
+	}
+	else
+	{
+		//middle cmd
+	}
 }
 
 //TODO initiailize cmd_count, *pid and **pipes
@@ -50,13 +71,13 @@ void    init_struct (t_pipex *pipex, int argc, char **argv, char **envp)
 	pipex->argv = argv;
 	pipex->envp = envp;
 	pipex->cmd_count = argc - 3;
-	dprintf(2, "count cmds: %d\n", pipex->cmd_count);
+	//dprintf(2, "count cmds: %d\n", pipex->cmd_count);
 	pipex->pid = malloc (sizeof (int) * (pipex->cmd_count - 1));
 	if (!pipex->pid)
 	{
 		//error handling
 	}
-	dprintf(2, "count pipes: %d\n", pipex->cmd_count - 1);
+	//dprintf(2, "count pipes: %d\n", pipex->cmd_count - 1);
 	pipex->pipes = malloc (sizeof(int*) * (pipex->cmd_count - 1));
 	if (!pipex->pipes)
 	{
@@ -102,7 +123,7 @@ to test if that stuff works just comment out this line (output goes into stdout)
 3. execute cmd1 (execve)
 4. close infile
 X. close fds that are not used and pipe ends */
-void	child_cmd_1(t_pipex *pipex)
+void	child_cmd_first(t_pipex *pipex)
 {
 	pipex->fd_infile = open(pipex->argv[1], O_RDONLY);
 	if (pipex->fd_infile  < 0)
@@ -125,7 +146,7 @@ close writing end of pipe
 3. execute cmd2 (execve)
 4. close outfile
 X. close fds that are not used and pipe ends */
-void	child_cmd_2(t_pipex *pipex)
+void	child_cmd_last(t_pipex *pipex)
 {
 	pipex->fd_outfile = open(pipex->argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (pipex->fd_outfile < 0)

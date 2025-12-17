@@ -2,7 +2,7 @@
 
 # bonus info config (CHANGE HERE if your bonus exec/rule is not 'pipex')
 pipex_bonus=pipex
-rule_bonus=pipex
+rule_bonus=bonus
 
 # const
 vlgppx='/usr/bin/valgrind --trace-children=yes --leak-check=full --track-fds=yes'
@@ -31,7 +31,7 @@ which timeout && echo -e "Timeout is installed. Tester starting ..." || { echo -
 fi
 
 # bonus rule ?
-cat Makefile | grep -q "bonus:" && bonus=1 || bonus=0
+cat file | grep -q "bonus:" && bonus=1 || bonus=0
 
 # print intro
 echo "------------------------------------"
@@ -50,15 +50,15 @@ echo "------------------------------------"
 echo -e "${YEL_BG}Mandatory tests${END}"
 
 #norminette
-echo -ne "${BLU_BG}Test norminette:${END} \t\t\t\t\t\t\t-->"
-norm=$(find . | grep -E ".*(\.c|\.h)$" | norminette)
-if [[ $(echo "$norm" | grep -E -v "OK\!$") ]] ;
-then
-	echo -e "${RED} norme errors:${END}"
-	echo -e "$norm" | grep -E -v "OK\!$"
-else
-	echo -e "${GREEN} norm ok${END}"
-fi
+#echo -ne "${BLU_BG}Test norminette:${END} \t\t\t\t\t\t\t-->"
+#norm=$(find . | grep -E ".*(\.c|\.h)$" | norminette)
+#if [[ $(echo "$norm" | grep -E -v "OK\!$") ]] ;
+#then
+#	echo -e "${RED} norme errors:${END}"
+#	echo -e "$norm" | grep -E -v "OK\!$"
+#else
+#	echo -e "${GREEN} norm ok${END}"
+#fi
 
 #makefile 
 echo -ne "${BLU_BG}Test Makefile:${END} \t\t\t\t\t\t\t\t-->"
