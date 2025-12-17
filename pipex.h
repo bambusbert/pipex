@@ -6,13 +6,13 @@
 /*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 16:29:31 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/17 16:39:21 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include <errno.h>
-#include <stdio.h> //TODO remove
+//#include <stdio.h> //TODO remove
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
