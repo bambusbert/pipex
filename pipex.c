@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 14:37:26 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 14:40:55 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,20 +99,11 @@ void	child_cmd_2(int *fd, char **argv, char **envp)
 
 void	error_exit(char *error_msg, int status)
 {
-	//(void)error_msg;
 	if (status == 127)
-		errno = ENOENT; // No such file or directory
+		errno = ENOENT;
 	else if (status == 126)
-		errno = EACCES; // Permission denied
+		errno = EACCES;
 	perror(error_msg);
-	//perror(NULL);
-	exit(status);
-}
-
-void	error_exit2(char *error_msg, int status)
-{
-	printf("%s\n", error_msg);
-	strerror(errno);
 	exit(status);
 }
 
