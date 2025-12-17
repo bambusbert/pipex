@@ -1,127 +1,127 @@
-==92028== Memcheck, a memory error detector
-==92028== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==92028== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==92028== Command: ./pipex Makefile cat cat cat cat cat cat outf
-==92028== 
-==92030== Memcheck, a memory error detector
-==92030== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==92030== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==92030== Command: /usr/bin/cat
-==92030== 
-==92031== Memcheck, a memory error detector
-==92031== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==92031== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==92031== Command: /usr/bin/cat
-==92031== 
-==92032== Memcheck, a memory error detector
-==92032== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==92032== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==92032== Command: /usr/bin/cat
-==92032== 
-==92033== Memcheck, a memory error detector
-==92033== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==92033== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==92033== Command: /usr/bin/cat
-==92033== 
-==92034== Memcheck, a memory error detector
-==92034== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==92034== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==92034== Command: /usr/bin/cat
-==92034== 
-==92035== Memcheck, a memory error detector
-==92035== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==92035== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==92035== Command: /usr/bin/cat
-==92035== 
-==92030== 
-==92030== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
-==92030== 
-==92030== HEAP SUMMARY:
-==92030==     in use at exit: 0 bytes in 0 blocks
-==92030==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
-==92030== 
-==92030== All heap blocks were freed -- no leaks are possible
-==92030== 
-==92030== For lists of detected and suppressed errors, rerun with: -s
-==92030== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==92031== 
-==92031== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
-==92031== 
-==92031== HEAP SUMMARY:
-==92031==     in use at exit: 0 bytes in 0 blocks
-==92031==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
-==92031== 
-==92031== All heap blocks were freed -- no leaks are possible
-==92031== 
-==92031== For lists of detected and suppressed errors, rerun with: -s
-==92031== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==92032== 
-==92032== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
-==92032== 
-==92032== HEAP SUMMARY:
-==92032==     in use at exit: 0 bytes in 0 blocks
-==92032==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
-==92032== 
-==92032== All heap blocks were freed -- no leaks are possible
-==92032== 
-==92032== For lists of detected and suppressed errors, rerun with: -s
-==92032== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==92033== 
-==92033== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
-==92033== 
-==92033== HEAP SUMMARY:
-==92033==     in use at exit: 0 bytes in 0 blocks
-==92033==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
-==92033== 
-==92033== All heap blocks were freed -- no leaks are possible
-==92033== 
-==92033== For lists of detected and suppressed errors, rerun with: -s
-==92033== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==92034== 
-==92034== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
-==92034== 
-==92034== HEAP SUMMARY:
-==92034==     in use at exit: 0 bytes in 0 blocks
-==92034==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
-==92034== 
-==92034== All heap blocks were freed -- no leaks are possible
-==92034== 
-==92034== For lists of detected and suppressed errors, rerun with: -s
-==92034== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==92035== 
-==92035== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
-==92035== 
-==92035== HEAP SUMMARY:
-==92035==     in use at exit: 0 bytes in 0 blocks
-==92035==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
-==92035== 
-==92035== All heap blocks were freed -- no leaks are possible
-==92035== 
-==92035== For lists of detected and suppressed errors, rerun with: -s
-==92035== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==92028== 
-==92028== FILE DESCRIPTORS: 8 open (8 inherited) at exit.
-==92028== 
-==92028== HEAP SUMMARY:
-==92028==     in use at exit: 104 bytes in 7 blocks
-==92028==   total heap usage: 7 allocs, 0 frees, 104 bytes allocated
-==92028== 
-==92028== 24 bytes in 1 blocks are definitely lost in loss record 1 of 3
-==92028==    at 0x483FB26: malloc (vg_replace_malloc.c:447)
-==92028==    by 0x40087C: init_struct (pipex_bonus.c:97)
-==92028==    by 0x400575: main (pipex_bonus.c:28)
-==92028== 
-==92028== 80 (40 direct, 40 indirect) bytes in 1 blocks are definitely lost in loss record 3 of 3
-==92028==    at 0x483FB26: malloc (vg_replace_malloc.c:447)
-==92028==    by 0x40089F: init_struct (pipex_bonus.c:103)
-==92028==    by 0x400575: main (pipex_bonus.c:28)
-==92028== 
-==92028== LEAK SUMMARY:
-==92028==    definitely lost: 64 bytes in 2 blocks
-==92028==    indirectly lost: 40 bytes in 5 blocks
-==92028==      possibly lost: 0 bytes in 0 blocks
-==92028==    still reachable: 0 bytes in 0 blocks
-==92028==         suppressed: 0 bytes in 0 blocks
-==92028== 
-==92028== For lists of detected and suppressed errors, rerun with: -s
-==92028== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==100445== Memcheck, a memory error detector
+==100445== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==100445== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==100445== Command: ./pipex Makefile cat cat cat cat cat cat outf
+==100445== 
+==100457== Memcheck, a memory error detector
+==100457== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==100457== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==100457== Command: /usr/bin/cat
+==100457== 
+==100458== Memcheck, a memory error detector
+==100458== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==100458== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==100458== Command: /usr/bin/cat
+==100458== 
+==100459== Memcheck, a memory error detector
+==100459== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==100459== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==100459== Command: /usr/bin/cat
+==100459== 
+==100460== Memcheck, a memory error detector
+==100460== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==100460== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==100460== Command: /usr/bin/cat
+==100460== 
+==100461== Memcheck, a memory error detector
+==100461== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==100461== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==100461== Command: /usr/bin/cat
+==100461== 
+==100462== Memcheck, a memory error detector
+==100462== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==100462== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==100462== Command: /usr/bin/cat
+==100462== 
+==100457== 
+==100457== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
+==100457== 
+==100457== HEAP SUMMARY:
+==100457==     in use at exit: 0 bytes in 0 blocks
+==100457==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
+==100457== 
+==100457== All heap blocks were freed -- no leaks are possible
+==100457== 
+==100457== For lists of detected and suppressed errors, rerun with: -s
+==100457== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==100459== 
+==100459== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
+==100459== 
+==100459== HEAP SUMMARY:
+==100459==     in use at exit: 0 bytes in 0 blocks
+==100459==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
+==100459== 
+==100459== All heap blocks were freed -- no leaks are possible
+==100459== 
+==100459== For lists of detected and suppressed errors, rerun with: -s
+==100459== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==100458== 
+==100458== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
+==100458== 
+==100458== HEAP SUMMARY:
+==100458==     in use at exit: 0 bytes in 0 blocks
+==100458==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
+==100458== 
+==100458== All heap blocks were freed -- no leaks are possible
+==100458== 
+==100458== For lists of detected and suppressed errors, rerun with: -s
+==100458== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==100460== 
+==100460== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
+==100460== 
+==100460== HEAP SUMMARY:
+==100460==     in use at exit: 0 bytes in 0 blocks
+==100460==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
+==100460== 
+==100460== All heap blocks were freed -- no leaks are possible
+==100460== 
+==100460== For lists of detected and suppressed errors, rerun with: -s
+==100460== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==100461== 
+==100461== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
+==100461== 
+==100461== HEAP SUMMARY:
+==100461==     in use at exit: 0 bytes in 0 blocks
+==100461==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
+==100461== 
+==100461== All heap blocks were freed -- no leaks are possible
+==100461== 
+==100461== For lists of detected and suppressed errors, rerun with: -s
+==100461== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==100462== 
+==100462== FILE DESCRIPTORS: 5 open (5 inherited) at exit.
+==100462== 
+==100462== HEAP SUMMARY:
+==100462==     in use at exit: 0 bytes in 0 blocks
+==100462==   total heap usage: 31 allocs, 31 frees, 266,137 bytes allocated
+==100462== 
+==100462== All heap blocks were freed -- no leaks are possible
+==100462== 
+==100462== For lists of detected and suppressed errors, rerun with: -s
+==100462== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==100445== 
+==100445== FILE DESCRIPTORS: 8 open (8 inherited) at exit.
+==100445== 
+==100445== HEAP SUMMARY:
+==100445==     in use at exit: 104 bytes in 7 blocks
+==100445==   total heap usage: 7 allocs, 0 frees, 104 bytes allocated
+==100445== 
+==100445== 24 bytes in 1 blocks are definitely lost in loss record 1 of 3
+==100445==    at 0x483FB26: malloc (vg_replace_malloc.c:447)
+==100445==    by 0x4007D4: init_struct (pipex_bonus.c:98)
+==100445==    by 0x400575: main (pipex_bonus.c:28)
+==100445== 
+==100445== 80 (40 direct, 40 indirect) bytes in 1 blocks are definitely lost in loss record 3 of 3
+==100445==    at 0x483FB26: malloc (vg_replace_malloc.c:447)
+==100445==    by 0x4007F7: init_struct (pipex_bonus.c:104)
+==100445==    by 0x400575: main (pipex_bonus.c:28)
+==100445== 
+==100445== LEAK SUMMARY:
+==100445==    definitely lost: 64 bytes in 2 blocks
+==100445==    indirectly lost: 40 bytes in 5 blocks
+==100445==      possibly lost: 0 bytes in 0 blocks
+==100445==    still reachable: 0 bytes in 0 blocks
+==100445==         suppressed: 0 bytes in 0 blocks
+==100445== 
+==100445== For lists of detected and suppressed errors, rerun with: -s
+==100445== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)

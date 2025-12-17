@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 21:58:38 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 22:03:06 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,27 +26,17 @@ int	main(int argc, char **argv, char **envp)
 		custom_error("wrong input. Correct Input: ./pipex <file1> <cmd1> <cmd2> ... <cmd_n> <file2>",
 			EXIT_FAILURE);
 	init_struct(&pipex, argc, argv, envp);
-	init_pipes(pipex);
-	pipex.pid[0] = fork();
-	if (pipex.pid[0] < 0)
-		clean_exit("first fork failed", pipex.pipes[0], -1);
-	if (pipex.pid[0] == 0)
-		child(&pipex, 1);
-	i = 1;
-	while (i < pipex.cmd_count - 1)
+	init_pipes(&pipex);
+	i = 0;
+	while (i < pipex.cmd_count)
 	{
 		pipex.pid[i] = fork();
 		if (pipex.pid[i] < 0)
-			clean_exit("middle fork failed", pipex.pipes[i], -1);
+			clean_exit("fork failed", pipex.pipes[i], -1);
 		if (pipex.pid[i] == 0)
 			child(&pipex, i + 1);
 		i++;
 	}
-	pipex.pid[pipex.cmd_count - 1] = fork();
-	if (pipex.pid[pipex.cmd_count - 1] < 0)
-		clean_exit("second fork failed", pipex.pipes[0], -1);
-	if (pipex.pid[pipex.cmd_count - 1] == 0)
-		child(&pipex, i + 1);
 	close_all_pipes(&pipex);
 	return (return_handler(pipex.pid[0], pipex.pid[pipex.cmd_count - 1]));
 }
@@ -56,10 +46,9 @@ void	init_pipes(t_pipex *pipex)
 	int i;
 
 	i = 0;
-	
-	while (i < pipex.cmd_count - 1)
+	while (i < pipex->cmd_count - 1)
 	{
-		if (pipe(pipex.pipes[i]) == -1)
+		if (pipe(pipex->pipes[i]) == -1)
 			custom_error("pipe returned -1", EXIT_FAILURE);
 		i++;
 	}
@@ -85,9 +74,7 @@ void	child(t_pipex *pipex, int cmd_count)
 	else if (cmd_count == pipex->cmd_count)
 		child_cmd_last(pipex);
 	else
-	{
 		child_cmd_middle(pipex, cmd_count);
-	}
 }
 
 // TODO error handling
@@ -99,13 +86,11 @@ void	init_struct(t_pipex *pipex, int argc, char **argv, char **envp)
 	pipex->argv = argv;
 	pipex->envp = envp;
 	pipex->cmd_count = argc - 3;
-	// dprintf(2, "count cmds: %d\n", pipex->cmd_count);
 	pipex->pid = malloc(sizeof(int) * (pipex->cmd_count));
 	if (!pipex->pid)
 	{
 		// error handling
 	}
-	// dprintf(2, "count pipes: %d\n", pipex->cmd_count - 1);
 	pipex->pipes = malloc(sizeof(int *) * (pipex->cmd_count - 1));
 	if (!pipex->pipes)
 	{
