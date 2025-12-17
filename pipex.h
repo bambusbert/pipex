@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 14:40:41 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:29:31 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,5 @@ void	child_cmd_1(int *fd, char **argv, char **envp);
 void	child_cmd_2(int *fd, char **argv, char **envp);
 int		is_empty(char *str);
 char	*absolute_path_helper(char **strs);
-void    clean_exit(char *msg, int *p_fd, int file_fd);
+void	clean_exit(char *msg, int *p_fd, int file_fd);
+int		return_handler(int pid1, int pid2);

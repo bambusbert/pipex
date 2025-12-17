@@ -6,7 +6,7 @@
 /*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 15:07:53 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/17 16:29:02 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ int	main(int argc, char **argv, char **envp)
 	int	fd[2];
 	int	pid1;
 	int	pid2;
-	int	status;
-	int	exit_code;
 
 	if (argc != 5)
 		return (1);
@@ -40,12 +38,21 @@ int	main(int argc, char **argv, char **envp)
 		child_cmd_2(fd, argv, envp);
 	close(fd[0]);
 	close(fd[1]);
-	// waitpid(pid1, NULL, 0);
-	// waitpid(pid2, &status, 0);
-	while ((pid1 = wait(&status)) != -1)
+	return return_handler (pid1, pid2);
+}
+
+int	return_handler(int pid1, int pid2)
+{
+	int exit_code;
+	int	status;
+	
+	exit_code = 0;
+	pid1 = wait(&status);
+	while (pid1 != -1)
 	{
 		if (pid1 == pid2)
 			exit_code = status;
+		pid1 = wait(&status);
 	}
 	if (WIFEXITED(exit_code))
 		return (WEXITSTATUS(exit_code));
