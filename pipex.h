@@ -6,16 +6,19 @@
 /*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 17:45:15 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/17 17:48:35 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/wait.h>
-#include <unistd.h>
+#ifndef PIPEX_H
+# define PIPEX_H
+
+# include "libft/libft.h"
+# include <errno.h>
+# include <stdio.h>
+# include <string.h>
+# include <sys/wait.h>
+# include <unistd.h>
 
 void	do_execve_stuff(char *str, char **envp);
 char	*extract_pathvar_from_envp(char **envp);
@@ -30,3 +33,5 @@ char	*absolute_path_helper(char **strs);
 void	clean_exit(char *msg, int *p_fd, int file_fd);
 int		return_handler(int pid1, int pid2);
 void	custom_error(char *msg, int status);
+
+#endif
