@@ -6,7 +6,7 @@
 /*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 12:51:41 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/17 13:09:50 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	*extract_pathvar_from_envp(char **envp)
 			return (envp[i] + 5);
 		i++;
 	}
-	error_exit("PATH variable not found in ENV variable\n", EXIT_FAILURE);
+	error_exit("PATH variable not found in ENV variable\n", 127);
 	return (NULL);
 }
 

@@ -51,11 +51,11 @@ echo -e "${YEL_BG}Mandatory tests${END}"
 
 #norminette
 echo -ne "${BLU_BG}Test norminette:${END} \t\t\t\t\t\t\t-->"
-norm=$(find . | grep -E ".*(\.c|\.h)$" | norminette)
-if [[ $(echo "$norm" | grep -E -v "OK\!$") ]] ;
+norm=$(find . | egrep ".*(\.c|\.h)$" | norminette)
+if [[ $(echo "$norm" | egrep -v "OK\!$") ]] ;
 then
 	echo -e "${RED} norme errors:${END}"
-	echo -e "$norm" | grep -E -v "OK\!$"
+	echo -e "$norm" | egrep -v "OK\!$"
 else
 	echo -e "${GREEN} norm ok${END}"
 fi
@@ -66,7 +66,7 @@ make re 1>/dev/null 2> stderrmake.txt
 make > stdoutmakebis.txt 2>&1
 [[ -s stderrmake.txt ]] && echo -ne "${RED} make wrote on std err${END}" || echo -ne "${GREEN} no make error${END}" 
 echo -n " -- "
-cat stdoutmakebis.txt | grep -E -viq "(nothin|already|date)" && echo -ne "${RED}makefile relink?${END}" || echo -ne "${GREEN}no relink${END}"
+cat stdoutmakebis.txt | egrep -viq "(nothin|already|date)" && echo -ne "${RED}makefile relink?${END}" || echo -ne "${GREEN}no relink${END}"
 echo -n " -- "
 [[ -f pipex && -x pipex ]] && echo -e "${GREEN}exec named pipex${END}" || echo -e "${RED}no exec file found named pipex${END}"
 rm -rf stderrmake.txt stdoutmakebis.txt
@@ -78,7 +78,7 @@ make ${rule_bonus} 1>/dev/null 2> stderrmake.txt
 make ${rule_bonus} > stdoutmakebis.txt 2>&1
 [[ -s stderrmake.txt ]] && echo -ne "${RED} make ${rule_bonus} wrote on std err${END}" || echo -ne "${GREEN} no make ${rule_bonus} error${END}" 
 echo -ne " -- "
-cat stdoutmakebis.txt | grep -E -viq "(nothin|already|date)" && echo -ne "${RED}makefile relinks on bonus?${END}" || echo -ne "${GREEN}no relink on bonus${END}"
+cat stdoutmakebis.txt | egrep -viq "(nothin|already|date)" && echo -ne "${RED}makefile relinks on bonus?${END}" || echo -ne "${GREEN}no relink on bonus${END}"
 echo -ne " -- "
 [[ -f $pipex_bonus && -x $pipex_bonus ]] && echo -e "${GREEN}exec named $pipex_bonus${END}" || echo -e "${RED}no exec file found named $pipex_bonus${END}"
 rm -rf stderrmake.txt stdoutmakebis.txt
@@ -102,7 +102,7 @@ fi
 if [[ -s no_arg_err.txt || -s one_arg_err.txt || -s two_arg_err.txt || -s three_arg_err.txt ]] ; then
 	echo -ne "${GREEN} pipex wrote on std err (fd 2)${END} "
 fi
-if [[ $(cat no_arg.txt no_arg_err.txt one_arg.txt one_arg_err.txt two_arg.txt two_arg_err.txt three_arg.txt three_arg_err.txt | grep -E "(yi|yo)") ]] ; then
+if [[ $(cat no_arg.txt no_arg_err.txt one_arg.txt one_arg_err.txt two_arg.txt two_arg_err.txt three_arg.txt three_arg_err.txt | egrep "(yi|yo)") ]] ; then
 	echo -ne "${RED} pipex executes cmds ...${END}"
 fi
 rm -rf *arg*.txt outfile infile
@@ -166,7 +166,7 @@ ${bin_path}/lsoip < Makefile 2>/dev/null | ${bin_path}/cati > outf 2>/dev/null
 code=$(echo $?)
 [[ -s stderr.txt ]] && echo -ne "${GREEN}OK Stderr: output. ${END}" || echo -ne "${YEL}Stderr: no output. ${END}"
 [[ -s stdout.txt ]] && echo -ne "${YEL}Stdout: unexpected output. ${END}" || echo -ne "${GREEN}Stdout: no output. ${END}"
-[[ $(cat stderr.txt stdout.txt 2>/dev/null | grep -E -i "(file|directory)") ]] && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"No such file or directory\") ${END}"
+[[ $(cat stderr.txt stdout.txt 2>/dev/null | egrep -i "(file|directory)") ]] && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"No such file or directory\") ${END}"
 [[ $code -eq 127 ]] && echo -e "${GREEN}(return status == 127)${END}" || echo -e "${YEL}(return status != 127)${END}"
 rm -f stderr.txt stdout.txt outf
 
@@ -176,7 +176,7 @@ code=$(echo $?)
 ls -l | grep -q OUI && echo -ne "${GREEN}OK. ${END}" || echo -ne "${RED}KO. ${END}"
 [[ -s stderr.txt ]] || echo -ne "${YEL}Stderr: no output. ${END}"
 [[ -s stdout.txt ]] && echo -ne "${YEL}Stdout: unexpected output. ${END}"
-[[ $(cat stderr.txt stdout.txt 2>/dev/null | grep -E -i "(file|directory)") ]] && echo -ne "${GREEN}(err msg ok) ${END}" || echo -ne "${YEL}(err msg without \"No such file or directory\") ${END}"
+[[ $(cat stderr.txt stdout.txt 2>/dev/null | egrep -i "(file|directory)") ]] && echo -ne "${GREEN}(err msg ok) ${END}" || echo -ne "${YEL}(err msg without \"No such file or directory\") ${END}"
 [[ $code -eq 127 ]] && echo -e "${GREEN}(return status == 127)${END}" || echo -e "${YEL}(return status != 127)${END}"
 rm -f stderr.txt stdout.txt outf OUI
 
@@ -186,7 +186,7 @@ code=$(echo $?)
 ls -l | grep -q OUI && echo -ne "${GREEN}OK. ${END}" || echo -ne "${RED}KO. ${END}"
 [[ -s stderr.txt ]] || echo -ne "${YEL}Stderr: no output. ${END}"
 [[ -s stdout.txt ]] && echo -ne "${YEL}Stdout: unexpected output. ${END}"
-[[ $(cat stderr.txt stdout.txt 2>/dev/null | grep -E -i "(file|directory)") ]] && echo -ne "${GREEN}(err msg ok) ${END}" || echo -ne "${YEL}(err msg without \"No such file or directory\") ${END}"
+[[ $(cat stderr.txt stdout.txt 2>/dev/null | egrep -i "(file|directory)") ]] && echo -ne "${GREEN}(err msg ok) ${END}" || echo -ne "${YEL}(err msg without \"No such file or directory\") ${END}"
 [[ $code -eq 0 ]] && echo -e "${GREEN}(return status == 0)${END}" || echo -e "${YEL}(- return status != 0)${END}"
 rm -f stderr.txt stdout.txt outf OUI
 
@@ -199,7 +199,7 @@ lsoip < Makefile 2>/dev/null | cati > t1_expected 2>/dev/null
 code=$(echo $?)
 [[ -s stderr.txt ]] && echo -ne "${GREEN}OK Stderr: output. ${END}" || echo -ne "${YEL}Stderr: no output. ${END}"
 [[ -s stdout.txt ]] && echo -ne "${YEL}Stdout: unexpected output. ${END}" || echo -ne "${GREEN}Stdout: no output. ${END}"
-[[ $(cat stderr.txt stdout.txt 2>/dev/null | grep -E -i "(command|found)") ]] && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"Command not found\") ${END}"
+[[ $(cat stderr.txt stdout.txt 2>/dev/null | egrep -i "(command|found)") ]] && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"Command not found\") ${END}"
 [[ $code -eq 127 ]] && echo -e "${GREEN}(return status == 127)${END}" || echo -e "${YEL}(return status != 127)${END}"
 rm stderr.txt stdout.txt t1_expected outf
 
@@ -209,7 +209,7 @@ code=$(echo $?)
 ls -l | grep -q OUI && echo -ne "${GREEN}OK. ${END}"  || echo -ne "${RED}KO. ${END}"
 [[ -s stderr.txt ]] || echo -ne "${YEL}Stderr: no output. ${END}"
 [[ -s stdout.txt ]] && echo -ne "${YEL}Stdout: unexpected output. ${END}"
-[[ $(cat stderr.txt stdout.txt 2>/dev/null | grep -E -i "(command|found)") ]] && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"Command not found\") ${END}"
+[[ $(cat stderr.txt stdout.txt 2>/dev/null | egrep -i "(command|found)") ]] && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"Command not found\") ${END}"
 [[ $code -eq 127 ]] && echo -e "${GREEN}(return status == 127)${END}" || echo -e "${YEL}(return status != 127)${END}"
 rm -f stderr.txt stdout.txt outf OUI
 
@@ -219,7 +219,7 @@ code=$(echo $?)
 ls -l | grep -q OUI && echo -ne "${GREEN}OK. ${END}" || echo -ne "${RED}KO. ${END}"
 [[ -s stderr.txt ]] || echo -ne "${YEL}Stderr: no output. ${END}"
 [[ -s stdout.txt ]] && echo -ne "${YEL}Stdout: unexpected output. ${END}"
-[[ $(cat stderr.txt stdout.txt 2>/dev/null | grep -E -i "(command|found)") ]] && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"Command not found\") ${END}"
+[[ $(cat stderr.txt stdout.txt 2>/dev/null | egrep -i "(command|found)") ]] && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"Command not found\") ${END}"
 [[ $code -eq 0 ]] && echo -e "${GREEN}(return status == 0)${END}" || echo -e "${YEL}(return status != 0) ${END}"
 rm -f stderr.txt stdout.txt outf OUI
 
@@ -231,7 +231,7 @@ echo -ne "Test 1 : ./pipex Makefile \" \" \" \" outf \t\t\t\t\t--> "
 code=$(echo $?)
 [[ -s stderr.txt ]] && echo -ne "${GREEN}OK Stderr: output. ${END}" || echo -ne "${YEL}Stderr: no output. ${END}"
 [[ -s stdout.txt ]] && echo -ne "${YEL}Stdout: unexpected output. ${END}" || echo -ne "${GREEN}Stdout: no output. ${END}"
-[[ $(cat stderr.txt stdout.txt 2>/dev/null | grep -E -ic "command not found") -eq 2 ]] && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(not 2 err msg with \"Command not found\") ${END}"
+[[ $(cat stderr.txt stdout.txt 2>/dev/null | egrep -ic "command not found") -eq 2 ]] && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(not 2 err msg with \"Command not found\") ${END}"
 [[ $code -eq 127 ]] && echo -e "${GREEN}(return status == 127)${END}" || echo -e "${YEL}(return status != 127)${END}"
 rm -f outf stderr.txt stdout.txt
 
@@ -241,7 +241,7 @@ code=$(echo $?)
 ls -l | grep -q OUI && echo -ne "${GREEN}OK. ${END}" || echo -ne "${RED}KO. ${END}"
 [[ -s stderr.txt ]] || echo -ne "${YEL}Stderr: no output. ${END}"
 [[ -s stdout.txt ]] && echo -ne "${YEL}Stdout: unexpected output. ${END}"
-cat stderr.txt stdout.txt 2>/dev/null | grep -E -qi "command not found" && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"Command not found\") ${END}"
+cat stderr.txt stdout.txt 2>/dev/null | egrep -qi "command not found" && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"Command not found\") ${END}"
 [[ $code -eq 127 ]] && echo -e "${GREEN}(return status == 127)${END}" || echo -e "${YEL}(return status != 127)${END}"
 rm -f outf stderr.txt stdout.txt outf OUI
 
@@ -251,7 +251,7 @@ code=$(echo $?)
 ls -l | grep -q OUI && echo -ne "${GREEN}OK. ${END}" || echo -ne "${RED}KO. ${END}"
 [[ -s stderr.txt ]] || echo -ne "${YEL}Stderr: no output. ${END}"
 [[ -s stdout.txt ]] && echo -ne "${YEL}Stdout: unexpected output. ${END}"
-cat stderr.txt stdout.txt 2>/dev/null | grep -E -qi "command not found" && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"Command not found\") ${END}"
+cat stderr.txt stdout.txt 2>/dev/null | egrep -qi "command not found" && echo -ne "${GREEN}(err msg) ${END}" || echo -ne "${YEL}(err msg without \"Command not found\") ${END}"
 [[ $code -eq 0 ]] && echo -e "${GREEN}(return status == 0)${END}" || echo -e "${YEL}(return status != 0)${END}"
 rm -f outf stderr.txt stdout.txt outf OUI
 
@@ -262,7 +262,7 @@ touch infile_r infile_no_r && chmod u-r infile_no_r
 echo -ne "Test 1 : ./pipex infile_r \"touch truc\" \"touch truc2\" t1_output\t\t--> "
 ./pipex infile_r "touch truc" "touch truc2" t1_output >/dev/null 2>&1 
 code=$(echo $?)
-[[ $(ls -l | grep -E -c "truc2?") -eq 2 ]] && echo -ne "${GREEN}OK. ${END}" || echo -ne "${RED}KO. ${END}"
+[[ $(ls -l | egrep -c "truc2?") -eq 2 ]] && echo -ne "${GREEN}OK. ${END}" || echo -ne "${RED}KO. ${END}"
 [[ $code -eq 0 ]] && echo -e "${GREEN}(return status == 0)${END}" || echo -e "${YEL}(return status != 0)${END}"
 rm -f t1_* truc*
 
@@ -293,7 +293,7 @@ touch outfile_w outfile_no_w && chmod u-w outfile_no_w
 echo -ne "Test 1 : ./pipex Makefile \"touch truc\" \"touch truc2\" outfile_w \t\t--> "
 ./pipex Makefile "touch truc" "touch truc2" outfile_w >/dev/null 2>&1 
 code=$(echo $?)
-[[ $(ls -l | grep -E "truc2?" | wc -l) -eq 2 ]] && echo -ne "${GREEN}OK. ${END}" || echo -ne "${RED}KO. ${END}"
+[[ $(ls -l | egrep "truc2?" | wc -l) -eq 2 ]] && echo -ne "${GREEN}OK. ${END}" || echo -ne "${RED}KO. ${END}"
 [[ $code -eq 0 ]] && echo -e "${GREEN}(return status == 0)${END}" || echo -e "${YEL}(return status != 0)${END}"
 rm -f truc*
 
@@ -420,7 +420,7 @@ env -i ./pipex Makefile "cat" "echo yo" outf > stderr.txt 2>&1
 code=$(echo $?)
 [[ -f outf ]] && cat outf | grep -q yo && ( echo -ne "${GREEN}OK - WOW t'es chaud, explique moi stp! ${END}" && [[ $code -eq 0 ]] && echo -e "${GREEN}(return status == 0) ${END}" || echo -e "${YEL}(return status != 0) ${END}" )
 [[ -f stderr.txt && $(cat stderr.txt | grep -ic "command not found") -eq 2 ]] && echo -ne "${GREEN}OK ${END}"
-[[ -f stderr.txt && $(cat stderr.txt | grep -E -i "seg,*fault|dump" |wc -l|tr -d "[:blank:]") -gt 0  ]] && echo -ne "${RED}KO segfault ${END}"
+[[ -f stderr.txt && $(cat stderr.txt | egrep -i "seg,*fault|dump" |wc -l|tr -d "[:blank:]") -gt 0  ]] && echo -ne "${RED}KO segfault ${END}"
 [[ -f outf ]] && cat outf | grep -q yo ||( [[ $code -eq 127 ]] && echo -e "${GREEN}(return status == 127)${END}" || echo -e "${YEL}(return status != 127)${END}" )
 rm -f outf stderr.txt
 
@@ -428,7 +428,7 @@ echo -ne "Test 2 : env -i ./pipex Makefile ${cat_path}/cat ${cat_path}/cat outf\
 env -i ./pipex Makefile "${cat_path}/cat" "${cat_path}/cat" outf > stderr.txt 2>&1
 code=$(echo $?)
 diff Makefile outf >/dev/null 2>&1 && echo -ne "${GREEN}OK ${END}" || echo -ne "${RED}KO ${END}"
-[[ -f stderr.txt && $(cat stderr.txt | grep -E -i "seg.*fault|dump" |wc -l|tr -d "[:blank:]") -gt 0 ]] && echo -ne "${RED}KO segfault ${END}"
+[[ -f stderr.txt && $(cat stderr.txt | egrep -i "seg.*fault|dump" |wc -l|tr -d "[:blank:]") -gt 0 ]] && echo -ne "${RED}KO segfault ${END}"
 [[ $code -eq 0 ]] && echo -e "${GREEN}(return status == 0)${END}" || echo -e "${YEL}(return status != 0)${END}"
 rm -f outf stderr.txt
 
@@ -443,7 +443,7 @@ code=$(echo $?)
 PATH=$tmp_PATH && export PATH
 [[ -f stderr.txt && $(cat stderr.txt | grep -ic "command not found") -eq 2 ]] && echo -ne "${GREEN}OK ${END}"
 [[ -f stderr.txt && $(cat stderr.txt | wc -l) -ne 2 ]] && echo -ne "${YEL}KO (not two lines written to stderr)${END}"
-[[ -f stderr.txt && $(cat stderr.txt | grep -E -i "seg,*fault|dump" |wc -l|tr -d "[:blank:]") -gt 0  ]] && echo -ne "${RED}KO segfault ${END}"
+[[ -f stderr.txt && $(cat stderr.txt | egrep -i "seg,*fault|dump" |wc -l|tr -d "[:blank:]") -gt 0  ]] && echo -ne "${RED}KO segfault ${END}"
 [[ $code -eq 127 ]] && echo -e "${GREEN}(return status == 127)${END}" || echo -e "${YEL}(return status != 127)${END}"
 rm -f outf stderr.txt
 
@@ -453,7 +453,7 @@ unset PATH
 code=$(echo $?)
 PATH=$tmp_PATH && export PATH
 diff Makefile outf >/dev/null 2>&1 && echo -ne "${GREEN}OK ${END}" || echo -ne "${RED}KO ${END}"
-[[ -f stderr.txt && $(cat stderr.txt | grep -E -i "seg,*fault|dump" |wc -l|tr -d "[:blank:]") -gt 0  ]] && echo -ne "${RED}KO segfault ${END}"
+[[ -f stderr.txt && $(cat stderr.txt | egrep -i "seg,*fault|dump" |wc -l|tr -d "[:blank:]") -gt 0  ]] && echo -ne "${RED}KO segfault ${END}"
 [[ $code -eq 0 ]] && echo -e "${GREEN}(return status == 0)${END}" || echo -e "${YEL}(return status != 0)${END}"
 rm -f outf stderr.txt
 
@@ -464,12 +464,12 @@ echo -e "${BLU_BG}Leaks via valgrind:${END}"
 
 echo -ne "Test 1 : valgrind ./pipex Makefile cat cat outf \t\t\t--> "
 $vlgppx ./pipex Makefile "cat" "cat" outf > vlg.txt 2>&1
-first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
 fd=$(cat vlg.txt | grep -o  "Open file descriptor [0-9]*:" | sort | uniq | wc -l | tr -d "[:blank:]")
-main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* open" | grep -E -o "[0-9]*")
-main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* std" | grep -E -o "[0-9]*")
+main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* open" | egrep -o "[0-9]*")
+main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* std" | egrep -o "[0-9]*")
 main_fd=$(( $main_fd_open - $main_fd_std ))
 [[ $first_proc -eq 0 ]] && echo -ne "${GREEN}no leak cat${END}" || echo -ne "${RED}$first_proc leaks first cat${END}"
 [[ $second_proc -eq 0 ]] && echo -ne "${GREEN} - no leak cat${END}" || echo -ne "${RED} - $second_proc leaks second cat${END}"
@@ -480,12 +480,12 @@ rm -f outf vlg.txt
 
 echo -ne "Test 2 : valgrind ./pipex Makefile yes head outf \t\t\t--> "
 timeout --preserve-status 2 $vlgppx ./pipex Makefile "yes" "head" outf > vlg.txt 2>&1
-first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
 fd=$(cat vlg.txt | grep -o  "Open file descriptor [0-9]*:" | sort | uniq | wc -l | tr -d "[:blank:]")
-main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* open" | grep -E -o "[0-9]*")
-main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* std" | grep -E -o "[0-9]*")
+main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* open" | egrep -o "[0-9]*")
+main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* std" | egrep -o "[0-9]*")
 main_fd=$(( $main_fd_open - $main_fd_std ))
 echo -ne "${GREEN}$first_proc leaks yes (it's ok)${END}"
 [[ $second_proc -eq 0 ]] && echo -ne "${GREEN} - no leak head${END}" || echo -ne "${RED} - $second_proc leaks head${END}"
@@ -496,12 +496,12 @@ rm -f outf vlg.txt
 
 echo -ne "Test 3 : valgrind ./pipex Makefile ${bin_path}/cat ${bin_path}/head outf \t--> "
 $vlgppx ./pipex Makefile ${bin_path}/cat ${bin_path}/head outf > vlg.txt 2>&1
-first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
 fd=$(cat vlg.txt | grep -o  "Open file descriptor [0-9]*:" | sort | uniq | wc -l | tr -d "[:blank:]")
-main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* open" | grep -E -o "[0-9]*")
-main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* std" | grep -E -o "[0-9]*")
+main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* open" | egrep -o "[0-9]*")
+main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* std" | egrep -o "[0-9]*")
 main_fd=$(( $main_fd_open - $main_fd_std ))
 [[ $first_proc -eq 0 ]] && echo -ne "${GREEN}no leak cat${END}" || echo -ne "${RED}$second_proc leaks cat${END}"
 [[ $second_proc -eq 0 ]] && echo -ne "${GREEN} - no leak head${END}" || echo -ne "${RED} - $second_proc leaks head${END}"
@@ -513,12 +513,12 @@ rm -f outf vlg.txt
 echo -ne "Test 4 : valgrind ./pipex infile_no_r cat \"echo yo\" outfile_no_w \t--> "
 touch infile_no_r outfile_no_w && chmod u-r infile_no_r && chmod u-w outfile_no_w
 $vlgppx ./pipex infile_no_r "cat" "echo yo" outfile_no_w > vlg.txt 2>&1
-first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
 fd=$(cat vlg.txt | grep -o  "Open file descriptor [0-9]*:" | sort | uniq | wc -l | tr -d "[:blank:]")
-main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* open" | grep -E -o "[0-9]*")
-main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* std" | grep -E -o "[0-9]*")
+main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* open" | egrep -o "[0-9]*")
+main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* std" | egrep -o "[0-9]*")
 main_fd=$(( $main_fd_open - $main_fd_std ))
 [[ $first_proc -eq 0 ]] && echo -ne "${GREEN}no leak cat${END}" || echo -ne "${RED}$first_proc leaks  cat${END}"
 [[ $second_proc -eq 0 ]] && echo -ne "${GREEN} - no leak echo${END}" || echo -ne "${RED} - $second_proc leaks echo${END}"
@@ -529,12 +529,12 @@ rm -f infile* outfile* vlg.txt
 
 echo -ne "Test 5 : valgrind ./pipex Makefile catiop \" \" outf \t\t\t--> "
 $vlgppx ./pipex Makefile "catiop" " " outf > vlg.txt 2>&1
-first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
 fd=$(cat vlg.txt | grep -o  "Open file descriptor [0-9]*:" | sort | uniq | wc -l | tr -d "[:blank:]")
-main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* open" | grep -E -o "[0-9]*")
-main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* std" | grep -E -o "[0-9]*")
+main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* open" | egrep -o "[0-9]*")
+main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* std" | egrep -o "[0-9]*")
 main_fd=$(( $main_fd_open - $main_fd_std ))
 [[ $first_proc -eq 0 ]] && echo -ne "${GREEN}no leak catiop${END}" || echo -ne "${RED}$first_proc leaks  catiop${END}"
 [[ $second_proc -eq 0 ]] && echo -ne "${GREEN} - no leak empty cmd${END}" || echo -ne "${RED} - $second_proc leaks empty cmd${END}"
@@ -547,12 +547,12 @@ echo -ne "Test 6 : valgrind ./pipex Makefile ./a.out (chmod u-x) \"echo yo\" out
 echo -e "#include <stdio.h>\nint main(void){printf(\"yo\");}" > main.c && gcc main.c && rm main.c
 chmod u-x a.out
 $vlgppx ./pipex Makefile "./a.out" "echo yo" outf > vlg.txt 2>&1
-first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+main_proc=$(cat vlg.txt | grep -m3 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
 fd=$(cat vlg.txt | grep -o  "Open file descriptor [0-9]*:" | sort | uniq | wc -l | tr -d "[:blank:]")
-main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* open" | grep -E -o "[0-9]*")
-main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* std" | grep -E -o "[0-9]*")
+main_fd_open=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* open" | egrep -o "[0-9]*")
+main_fd_std=$(cat vlg.txt | grep -m3 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* std" | egrep -o "[0-9]*")
 main_fd=$(( $main_fd_open - $main_fd_std ))
 [[ $first_proc -eq 0 ]] && echo -ne "${GREEN}no leak a.out${END}" || echo -ne "${RED}$first_proc leaks a.out${END}"
 [[ $second_proc -eq 0 ]] && echo -ne "${GREEN} - no leak echo${END}" || echo -ne "${RED} - $second_proc leaks echo${END}"
@@ -583,10 +583,10 @@ rm -rf *top_result zombies_test*
 gcc -o popo popo.c
 
 echo -ne "Test 1 : ./pipex Makefile \"sleep 3\" \"sleep 1\" outf \t\t\t--> "
-start_Z_nb=$(top -bn1 | head -n2 | grep -E -o "[0-9]* zombie$" | grep -E -o "[0-9]*")
+start_Z_nb=$(top -bn1 | head -n2 | egrep -o "[0-9]* zombie$" | egrep -o "[0-9]*")
 ./pipex Makefile "sleep 3" "sleep 1" outf &
 sleep 1
-exec_Z_nb=$(top -bn1 | head -n2 | grep -E -o "[0-9]* zombie$" | grep -E -o "[0-9]*")
+exec_Z_nb=$(top -bn1 | head -n2 | egrep -o "[0-9]* zombie$" | egrep -o "[0-9]*")
 ps -aux | grep Z | grep -vi grep > zombie_test1
 kill -s SIGTERM $! > /dev/null 2>&1 || kill -s SIGKILL $! > /dev/null 2>&1
 [[ $(( $exec_Z_nb - $start_Z_nb )) -eq 0 ]] && echo -e "${GREEN}OK (sleep 1 did not became a zombie)${END}" && rm -f zombie_test1
@@ -594,10 +594,10 @@ kill -s SIGTERM $! > /dev/null 2>&1 || kill -s SIGKILL $! > /dev/null 2>&1
 rm -f outf
 
 echo -ne "Test 2 : ./pipex Makefile \"sleep 1\" \"sleep 3\" outf \t\t\t--> "
-start_Z_nb=$(top -bn1 | head -n2 | grep -E -o "[0-9]* zombie$" | grep -E -o "[0-9]*")
+start_Z_nb=$(top -bn1 | head -n2 | egrep -o "[0-9]* zombie$" | egrep -o "[0-9]*")
 ./pipex Makefile "sleep 1" "sleep 3" outf &
 sleep 1 
-exec_Z_nb=$(top -bn1 | head -n2 | grep -E -o "[0-9]* zombie$" | grep -E -o "[0-9]*")
+exec_Z_nb=$(top -bn1 | head -n2 | egrep -o "[0-9]* zombie$" | egrep -o "[0-9]*")
 ps -aux | grep Z | grep -vi grep > zombie_test2
 kill -s SIGTERM $! > /dev/null 2>&1 || kill -s SIGKILL $! > /dev/null 2>&1
 [[ $(( $exec_Z_nb - $start_Z_nb )) -eq 0 ]] && echo -e "${GREEN}OK (sleep 1 did not became a zombie)${END}" && rm -f zombie_test2
@@ -605,10 +605,10 @@ kill -s SIGTERM $! > /dev/null 2>&1 || kill -s SIGKILL $! > /dev/null 2>&1
 rm -f outf
 
 echo -ne "Test 3 : ./pipex bad_infile ls \"sleep 2\" outf \t\t\t\t--> "
-start_Z_nb=$(top -bn1 | head -n2 | grep -E -o "[0-9]* zombie$" | grep -E -o "[0-9]*")
+start_Z_nb=$(top -bn1 | head -n2 | egrep -o "[0-9]* zombie$" | egrep -o "[0-9]*")
 ./pipex bad_infile ls "sleep 2" outf > /dev/null 2>&1 &
 sleep 1
-exec_Z_nb=$(top -bn1 | head -n2 | grep -E -o "[0-9]* zombie$" | grep -E -o "[0-9]*")
+exec_Z_nb=$(top -bn1 | head -n2 | egrep -o "[0-9]* zombie$" | egrep -o "[0-9]*")
 ps -aux | grep Z | grep -vi grep > zombie_test3
 kill -s SIGTERM $! > /dev/null 2>&1 || kill -s SIGKILL $! > /dev/null 2>&1
 [[ $(( $exec_Z_nb - $start_Z_nb )) -eq 0 ]] && echo -e "${GREEN}OK (ls did not became a zombie)${END}" && rm -f zombie_test3
@@ -616,9 +616,9 @@ kill -s SIGTERM $! > /dev/null 2>&1 || kill -s SIGKILL $! > /dev/null 2>&1
 rm -f outf
 
 echo -ne "Test 4 : ./pipex Makefile bad_cmd \"sleep 1\" outf \t\t\t--> "
-start_Z_nb=$(top -bn1 | head -n2 | grep -E -o "[0-9]* zombie$" | grep -E -o "[0-9]*")
+start_Z_nb=$(top -bn1 | head -n2 | egrep -o "[0-9]* zombie$" | egrep -o "[0-9]*")
 ./pipex Makefile bad_cmd "sleep 1" outf > /dev/null 2>&1 & 
-exec_Z_nb=$(top -bn1 | head -n2 | grep -E -o "[0-9]* zombie$" | grep -E -o "[0-9]*")
+exec_Z_nb=$(top -bn1 | head -n2 | egrep -o "[0-9]* zombie$" | egrep -o "[0-9]*")
 ps -aux | grep Z | grep -vi grep > zombie_test4
 kill -s SIGTERM $! > /dev/null 2>&1 || kill -s SIGKILL $! > /dev/null 2>&1
 [[ $(( $exec_Z_nb - $start_Z_nb )) -eq 0 ]] && echo -e "${GREEN}OK (bad_cmd did not became a zombie)${END}" && rm -f zombie_test4
@@ -675,10 +675,10 @@ diff t2_expected t2_output >/dev/null 2>&1 && echo -ne "${GREEN}OK${END}" || ech
 rm -f t2_* 
 
 echo -ne "Test 5 : ./${pipex_bonus} Makefile cat ls \"sleep 3\" date env ls outf \t\t\t--> "
-start_Z_nb=$(top -bn1 | head -n2 | grep -E -o "[0-9]* zombie$" | grep -E -o "[0-9]*")
+start_Z_nb=$(top -bn1 | head -n2 | egrep -o "[0-9]* zombie$" | egrep -o "[0-9]*")
 ./${pipex_bonus} Makefile cat ls "sleep 3" date env ls outf >/dev/null 2>&1 &
 sleep 1
-exec_Z_nb=$(top -bn1 | head -n2 | grep -E -o "[0-9]* zombie$" | grep -E -o "[0-9]*")
+exec_Z_nb=$(top -bn1 | head -n2 | egrep -o "[0-9]* zombie$" | egrep -o "[0-9]*")
 ps -aux | grep Z | grep -vi grep > zombie_test5
 kill -s SIGTERM $! > /dev/null 2>&1 || kill -s SIGKILL $! > /dev/null 2>&1
 [[ $(( $exec_Z_nb - $start_Z_nb )) -eq 0 ]] && echo -e "${GREEN}OK (no zombie)${END}" && rm -f zombie_test5
@@ -690,8 +690,8 @@ echo -ne "Test 6 : valgrind ./${pipex_bonus} Makefile cat cat cat cat cat cat ou
 $vlgppx ./${pipex_bonus} Makefile cat cat cat cat cat cat outf > vlg.txt 2>&1
 leaks=$(cat vlg.txt | grep -A 1 "HEAP SUMMARY" | tail -n1 | grep -o "[0-9]* bytes" | cut -d' ' -f1)
 fd=$(cat vlg.txt | grep -o  "Open file descriptor [0-9]*:" | sort | uniq | wc -l | tr -d "[:blank:]")
-main_fd_open=$(cat vlg.txt | grep -m7 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* open" | grep -E -o "[0-9]*")
-main_fd_std=$(cat vlg.txt | grep -m7 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* std" | grep -E -o "[0-9]*")
+main_fd_open=$(cat vlg.txt | grep -m7 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* open" | egrep -o "[0-9]*")
+main_fd_std=$(cat vlg.txt | grep -m7 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* std" | egrep -o "[0-9]*")
 main_fd=$(( $main_fd_open - $main_fd_std ))
 [[ $leaks -eq 0 ]] && echo -ne "${GREEN}no leak${END}" || echo -ne "${RED}$leaks leaks${END}"
 [[ $fd -eq 0 ]] && echo -ne "${GREEN} - no extra fd (main+child)${END}" || echo -ne "${YEL} - $fd extra fd (main+child)${END}"
@@ -735,7 +735,7 @@ echo -ne "Test 5 : ./${pipex_bonus} here_doc lim cat cat outf_no_w\t\t\t\t\t--> 
 touch outf_no_w && chmod u-w outf_no_w
 echo -e "yo\nyi\nlim" | ./${pipex_bonus} here_doc lim cat cat outf_no_w >/dev/null 2>&1
 code=$(echo $?)
-grep -E -q "yo|yi" outf_no_w && echo -ne "${RED}KO ${END}" || echo -ne "${GREEN}OK ${END}"
+egrep -q "yo|yi" outf_no_w && echo -ne "${RED}KO ${END}" || echo -ne "${GREEN}OK ${END}"
 [[ $code -eq 1 ]] && echo -e "${GREEN}(return status == 1)${END}" || echo -e " ${YEL}(return status != 1)${END}"
 rm -f outf_no_w
 
@@ -751,12 +751,12 @@ rm -f outf*
 if [[ $os == "linux" ]] ; then
 echo -ne "Test 7 : valgrind ./${pipex_bonus} here_doc lim cat cat outf \t\t\t\t--> "
 echo -e "yolim\nyop lim\nlim" | $vlgppx ./${pipex_bonus} here_doc lim cat cat outf > vlg.txt 2>&1
-first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
-main_proc=$(cat vlg.txt | grep -m4 -A 1 "HEAP SUMMARY" | tail -n1 | grep -E -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+first_proc=$(cat vlg.txt | grep -m1 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+second_proc=$(cat vlg.txt | grep -m2 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
+main_proc=$(cat vlg.txt | grep -m4 -A 1 "HEAP SUMMARY" | tail -n1 | egrep -o "[0-9]*,?[0-9]* bytes" | cut -d' ' -f1)
 fd=$(cat vlg.txt | grep -o  "Open file descriptor [0-9]*:" | sort | uniq | wc -l | tr -d "[:blank:]")
-main_fd_open=$(cat vlg.txt | grep -m4 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* open" | grep -E -o "[0-9]*") # -m4 (not m3) if process fork for heredoc
-main_fd_std=$(cat vlg.txt | grep -m4 "FILE DESCRIPTORS:" | tail -n1 | grep -E -o "[0-9]* std" | grep -E -o "[0-9]*")
+main_fd_open=$(cat vlg.txt | grep -m4 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* open" | egrep -o "[0-9]*") # -m4 (not m3) if process fork for heredoc
+main_fd_std=$(cat vlg.txt | grep -m4 "FILE DESCRIPTORS:" | tail -n1 | egrep -o "[0-9]* std" | egrep -o "[0-9]*")
 main_fd=$(( $main_fd_open - $main_fd_std ))
 [[ $first_proc -eq 0 ]] && echo -ne "${GREEN}no leak cat${END}" || echo -ne "${RED}$first_proc leaks  cat${END}"
 [[ $second_proc -eq 0 ]] && echo -ne "${GREEN} - no leak cat${END}" || echo -ne "${RED} - $second_proc leaks cat${END}"
@@ -900,7 +900,7 @@ echo -ne "Test 1 : ./$pipex_bonus Makefile cat (510 times) outf \t\t\t\t--> "
 code=$(echo $?)
 diff Makefile outf >/dev/null 2>&1 && echo -ne "${GREEN}OK ${END}" || echo -ne "${RED}KO ${END}"
 [[ $code -eq 0 ]] && echo -ne "${GREEN}(return status == 0) ${END}" || echo -ne "${YEL}(return status != 0) ${END}"
-cat err | grep -E -qi "segfault|segmentation|core ?dump" && echo -e "${RED}SUPER KO segfault${END}" || echo -e "${GREEN}(no segfault)${END}"
+cat err | egrep -qi "segfault|segmentation|core ?dump" && echo -e "${RED}SUPER KO segfault${END}" || echo -e "${GREEN}(no segfault)${END}"
 rm -f outf err
 
 echo -ne "Test 2 : ./$pipex_bonus Makefile cat (511 times) outf \t\t\t\t--> "
@@ -932,7 +932,7 @@ code=$(echo $?)
 diff Makefile outf >/dev/null 2>&1 && echo -ne "${GREEN}OK ${END}" || echo -ne "${YEL}KO ${END}"
 [[ $code -eq 0 ]] && echo -ne "${GREEN}(return status == 0) ${END}" || echo -ne "${YEL}(return status != 0) ${END}"
 cat err | grep -i "open" | grep -qi "files" && echo -ne "${GREEN}(err msg with open files) ${END}"
-cat err | grep -E -qi "segfault|segmentation|core ?dump" && echo -e "${RED}SUPER KO segfault${END}" || echo -e "${GREEN}(no segfault)${END}"
+cat err | egrep -qi "segfault|segmentation|core ?dump" && echo -e "${RED}SUPER KO segfault${END}" || echo -e "${GREEN}(no segfault)${END}"
 rm -f outf err
 
 echo -ne "Test 3 : ./$pipex_bonus Makefile cat (521 times) outf \t\t\t\t--> "
@@ -964,7 +964,7 @@ code=$(echo $?)
 diff Makefile outf >/dev/null 2>&1 && echo -ne "${GREEN}OK ${END}" || echo -ne "${YEL}KO ${END}"
 [[ $code -eq 0 ]] && echo -ne "${GREEN}(return status == 0) ${END}" || echo -ne "${YEL}(return status != 0) ${END}"
 cat err | grep -i "open" | grep -qi "files" && echo -ne "${GREEN}(err msg with open files) ${END}"
-cat err | grep -E -qi "segfault|segmentation|core ?dump" && echo -e "${RED}SUPER KO segfault${END}" || echo -e "${GREEN}(no segfault)${END}"
+cat err | egrep -qi "segfault|segmentation|core ?dump" && echo -e "${RED}SUPER KO segfault${END}" || echo -e "${GREEN}(no segfault)${END}"
 rm -f outf err
 
 fi
