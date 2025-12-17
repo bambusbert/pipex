@@ -6,15 +6,17 @@
 #    By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/11 13:28:23 by slambert          #+#    #+#              #
-#    Updated: 2025/12/15 14:14:19 by slambert         ###   ########.fr        #
+#    Updated: 2025/12/17 20:21:57 by slambert         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
 SRC =	pipex.c pipex_utils.c
+BONUS_SRC = pipex_bonus.c pipex_utils_bonus.c
 
 OBJS = ${SRC:.c=.o}
+BONUS_OBJS = $(BONUS_SRC:.c=.o)
 
 CC = cc
 RM = rm -f
@@ -32,6 +34,9 @@ LIBS = -L $(LIBFT_PATH) -lft
 $(NAME): 	$(LIBFT) $(OBJS)
 			$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
+bonus:		$(LIBFT) $(BONUS_OBJS)
+			$(CC) $(CFLAGS) $(BONUS_OBJS) $(LIBS) -o $(NAME)
+
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_PATH)
 
@@ -39,7 +44,7 @@ all:	${NAME}
 
 clean:
 	$(MAKE) -C $(LIBFT_PATH) clean
-	$(RM) $(OBJS)
+	$(RM) $(OBJS) $(BONUS_OBJS)
 
 fclean: clean
 	$(MAKE) -C $(LIBFT_PATH) fclean
@@ -47,4 +52,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus

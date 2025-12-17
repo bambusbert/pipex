@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 18:15:50 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 20:14:20 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 argv[2] = cmd1
 argv[3] = cmd2
 argv[4] = file2 */
+//TODO create one singular child process
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex pipex;
@@ -40,11 +41,14 @@ int	main(int argc, char **argv, char **envp)
 	return return_handler (pipex.pid1, pipex.pid2);
 }
 
+//TODO initiailize cmd_count, *pid and **pipes
 void    init_struct (t_pipex *pipex, int argc, char **argv, char **envp)
 {
 	pipex->argc = argc;
 	pipex->argv = argv;
 	pipex->envp = envp;
+	pipex->cmd_count = argc - 3;
+	dprintf(2, "count cmds: %d\n", pipex->cmd_count);
 }
 
 int	return_handler(int pid1, int pid2)
