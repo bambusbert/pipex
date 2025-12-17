@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 18:13:54 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 17:45:59 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,33 +18,27 @@ argv[3] = cmd2
 argv[4] = file2 */
 int	main(int argc, char **argv, char **envp)
 {
-	t_pipex pipex;
-	
-	if (argc != 5)
-		custom_error("wrong input. Correct Input: ./pipex <file1> <cmd1> <cmd2> ... <cmd_n> <file2>", EXIT_FAILURE);
-	init_struct(&pipex, argc, argv, envp);
-	if (pipe(pipex.fd) == -1)
-		custom_error("pipe returned -1", EXIT_FAILURE);
-	pipex.pid1 = fork();
-	if (pipex.pid1 < 0)
-		clean_exit("first fork failed", pipex.fd, -1);
-	if (pipex.pid1 == 0)
-		child_cmd_1(&pipex);
-	pipex.pid2 = fork();
-	if (pipex.pid2 < 0)
-		clean_exit("second fork failed", pipex.fd, -1);
-	if (pipex.pid2 == 0)
-		child_cmd_2(&pipex);
-	close(pipex.fd[0]);
-	close(pipex.fd[1]);
-	return return_handler (pipex.pid1, pipex.pid2);
-}
+	int	fd[2];
+	int	pid1;
+	int	pid2;
 
-void    init_struct (t_pipex *pipex, int argc, char **argv, char **envp)
-{
-	pipex->argc = argc;
-	pipex->argv = argv;
-	pipex->envp = envp;
+	if (argc != 5)
+		custom_error("wrong input. Correct Input: ./pipex <file1> <cmd1> <cmd2> <file2>", EXIT_FAILURE);
+	if (pipe(fd) == -1)
+		custom_error("pipe returned -1", EXIT_FAILURE);
+	pid1 = fork();
+	if (pid1 < 0)
+		clean_exit("first fork failed", fd, -1);
+	if (pid1 == 0)
+		child_cmd_1(fd, argv, envp);
+	pid2 = fork();
+	if (pid2 < 0)
+		clean_exit("second fork failed", fd, -1);
+	if (pid2 == 0)
+		child_cmd_2(fd, argv, envp);
+	close(fd[0]);
+	close(fd[1]);
+	return return_handler (pid1, pid2);
 }
 
 int	return_handler(int pid1, int pid2)
@@ -74,19 +68,21 @@ to test if that stuff works just comment out this line (output goes into stdout)
 3. execute cmd1 (execve)
 4. close infile
 X. close fds that are not used and pipe ends */
-void	child_cmd_1(t_pipex *pipex)
+void	child_cmd_1(int *fd, char **argv, char **envp)
 {
-	pipex->fd_infile = open(pipex->argv[1], O_RDONLY);
-	if (pipex->fd_infile  < 0)
-		clean_exit("infile error", pipex->fd, -1);
-	if (dup2(pipex->fd_infile, STDIN_FILENO) < 0)
-		clean_exit("dup2 infile error", pipex->fd, pipex->fd_infile );
-	if (dup2(pipex->fd[1], STDOUT_FILENO) < 0)
-		clean_exit("dup2 pipe error", pipex->fd, pipex->fd_infile );
-	close(pipex->fd_infile);
-	close(pipex->fd[0]);
-	close(pipex->fd[1]);
-	do_execve_stuff(pipex->argv[2], pipex->envp);
+	int	file;
+
+	file = open(argv[1], O_RDONLY);
+	if (file < 0)
+		clean_exit("infile error", fd, -1);
+	if (dup2(file, STDIN_FILENO) < 0)
+		clean_exit("dup2 infile error", fd, file);
+	if (dup2(fd[1], STDOUT_FILENO) < 0)
+		clean_exit("dup2 pipe error", fd, file);
+	close(file);
+	close(fd[0]);
+	close(fd[1]);
+	do_execve_stuff(argv[2], envp);
 }
 
 /* child process 2 - cmd2
@@ -97,19 +93,21 @@ close writing end of pipe
 3. execute cmd2 (execve)
 4. close outfile
 X. close fds that are not used and pipe ends */
-void	child_cmd_2(t_pipex *pipex)
+void	child_cmd_2(int *fd, char **argv, char **envp)
 {
-	pipex->fd_outfile = open(pipex->argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (pipex->fd_outfile < 0)
-		clean_exit("outfile error", pipex->fd, -1);
-	if (dup2(pipex->fd[0], STDIN_FILENO) < 0)
-		clean_exit("dup2 pipe error", pipex->fd, pipex->fd_outfile);
-	if (dup2(pipex->fd_outfile, STDOUT_FILENO) < 0)
-		clean_exit("dup2 outfile error", pipex->fd, pipex->fd_outfile);
-	close(pipex->fd_outfile);
-	close(pipex->fd[0]);
-	close(pipex->fd[1]);
-	do_execve_stuff(pipex->argv[3], pipex->envp);
+	int	file;
+
+	file = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (file < 0)
+		clean_exit("outfile error", fd, -1);
+	if (dup2(fd[0], STDIN_FILENO) < 0)
+		clean_exit("dup2 pipe error", fd, file);
+	if (dup2(file, STDOUT_FILENO) < 0)
+		clean_exit("dup2 outfile error", fd, file);
+	close(file);
+	close(fd[0]);
+	close(fd[1]);
+	do_execve_stuff(argv[3], envp);
 }
 
 void	error_exit(char *error_msg, int status)
