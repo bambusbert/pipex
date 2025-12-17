@@ -6,7 +6,7 @@
 /*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 12:48:15 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/17 12:51:41 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	do_execve_stuff(char *str, char **envp)
 char	*extract_pathvar_from_envp(char **envp)
 {
 	int	i;
-		
+
 	i = 0;
 	while (envp[i])
 	{
@@ -61,7 +61,6 @@ char	*extract_pathvar_from_envp(char **envp)
 			return (envp[i] + 5);
 		i++;
 	}
-	// dprintf(2, "path is '%s'\n", envp[i + 5]);
 	error_exit("PATH variable not found in ENV variable\n", EXIT_FAILURE);
 	return (NULL);
 }
@@ -75,19 +74,7 @@ char	*extract_path_from_pathvar(char *path_var, char **strs)
 	int		i;
 
 	if (ft_strchr(strs[0], '/'))
-	{
-		if (access(strs[0], F_OK) == -1)
-		{
-			free_2d(strs);
-			error_exit("command not found\n", 127);
-		}
-		if (access(strs[0], X_OK) == -1)
-		{
-			free_2d(strs);	
-			error_exit("command not executable\n", 126);
-		}
-		return (ft_strdup(strs[0]));
-	}
+		return (absolute_path_helper(strs));
 	paths = ft_split(path_var, ':');
 	if (!paths)
 	{
@@ -104,9 +91,24 @@ char	*extract_path_from_pathvar(char *path_var, char **strs)
 		i++;
 	}
 	free_2d(paths);
-	free_2d(strs);	
+	free_2d(strs);
 	error_exit("command not found\n", 127);
 	return (NULL);
+}
+
+char	*absolute_path_helper(char **strs)
+{
+	if (access(strs[0], F_OK) == -1)
+	{
+		free_2d(strs);
+		error_exit("command not found\n", 127);
+	}
+	if (access(strs[0], X_OK) == -1)
+	{
+		free_2d(strs);
+		error_exit("command not executable\n", 126);
+	}
+	return (ft_strdup(strs[0]));
 }
 
 char	*check_single_path(char *path, char **paths, char *cmd)
