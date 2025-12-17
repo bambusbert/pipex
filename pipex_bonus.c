@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 20:14:20 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 20:37:39 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,35 +21,59 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_pipex pipex;
 	
-	if (argc != 5)
+	if (argc <= 5)
 		custom_error("wrong input. Correct Input: ./pipex <file1> <cmd1> <cmd2> ... <cmd_n> <file2>", EXIT_FAILURE);
 	init_struct(&pipex, argc, argv, envp);
-	if (pipe(pipex.fd) == -1)
+	if (pipe(pipex.pipes[0]) == -1)
 		custom_error("pipe returned -1", EXIT_FAILURE);
-	pipex.pid1 = fork();
-	if (pipex.pid1 < 0)
-		clean_exit("first fork failed", pipex.fd, -1);
-	if (pipex.pid1 == 0)
+	pipex.pid[0] = fork();
+	if (pipex.pid[0] < 0)
+		clean_exit("first fork failed", pipex.pipes[0], -1);
+	if (pipex.pid[0] == 0)
 		child_cmd_1(&pipex);
-	pipex.pid2 = fork();
-	if (pipex.pid2 < 0)
-		clean_exit("second fork failed", pipex.fd, -1);
-	if (pipex.pid2 == 0)
+	pipex.pid[1] = fork();
+	if (pipex.pid[1] < 0)
+		clean_exit("second fork failed", pipex.pipes[0], -1);
+	if (pipex.pid[1] == 0)
 		child_cmd_2(&pipex);
-	close(pipex.fd[0]);
-	close(pipex.fd[1]);
-	return return_handler (pipex.pid1, pipex.pid2);
+	close(pipex.pipes[0][0]);
+	close(pipex.pipes[0][1]);
+	return return_handler (pipex.pid[0], pipex.pid[1]);
 }
 
 //TODO initiailize cmd_count, *pid and **pipes
 void    init_struct (t_pipex *pipex, int argc, char **argv, char **envp)
 {
+	int i;
+
 	pipex->argc = argc;
 	pipex->argv = argv;
 	pipex->envp = envp;
 	pipex->cmd_count = argc - 3;
 	dprintf(2, "count cmds: %d\n", pipex->cmd_count);
+	pipex->pid = malloc (sizeof (int) * (pipex->cmd_count - 1));
+	if (!pipex->pid)
+	{
+		//error handling
+	}
+	dprintf(2, "count pipes: %d\n", pipex->cmd_count - 1);
+	pipex->pipes = malloc (sizeof(int*) * (pipex->cmd_count - 1));
+	if (!pipex->pipes)
+	{
+		//error handling
+	}
+	i = 0;
+	while (i < pipex->cmd_count - 1)
+	{
+		pipex->pipes[i] = malloc (sizeof (int) * 2);
+		if (!pipex->pipes[i])
+		{
+			//error handling
+		}
+		i++;
+	}
 }
+
 
 int	return_handler(int pid1, int pid2)
 {
@@ -82,14 +106,14 @@ void	child_cmd_1(t_pipex *pipex)
 {
 	pipex->fd_infile = open(pipex->argv[1], O_RDONLY);
 	if (pipex->fd_infile  < 0)
-		clean_exit("infile error", pipex->fd, -1);
+		clean_exit("infile error", pipex->pipes[0], -1);
 	if (dup2(pipex->fd_infile, STDIN_FILENO) < 0)
-		clean_exit("dup2 infile error", pipex->fd, pipex->fd_infile );
-	if (dup2(pipex->fd[1], STDOUT_FILENO) < 0)
-		clean_exit("dup2 pipe error", pipex->fd, pipex->fd_infile );
+		clean_exit("dup2 infile error", pipex->pipes[0], pipex->fd_infile );
+	if (dup2(pipex->pipes[0][1], STDOUT_FILENO) < 0)
+		clean_exit("dup2 pipe error", pipex->pipes[0], pipex->fd_infile );
 	close(pipex->fd_infile);
-	close(pipex->fd[0]);
-	close(pipex->fd[1]);
+	close(pipex->pipes[0][0]);
+	close(pipex->pipes[0][1]);
 	do_execve_stuff(pipex->argv[2], pipex->envp);
 }
 
@@ -105,14 +129,14 @@ void	child_cmd_2(t_pipex *pipex)
 {
 	pipex->fd_outfile = open(pipex->argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (pipex->fd_outfile < 0)
-		clean_exit("outfile error", pipex->fd, -1);
-	if (dup2(pipex->fd[0], STDIN_FILENO) < 0)
-		clean_exit("dup2 pipe error", pipex->fd, pipex->fd_outfile);
+		clean_exit("outfile error", pipex->pipes[0], -1);
+	if (dup2(pipex->pipes[0][0], STDIN_FILENO) < 0)
+		clean_exit("dup2 pipe error", pipex->pipes[0], pipex->fd_outfile);
 	if (dup2(pipex->fd_outfile, STDOUT_FILENO) < 0)
-		clean_exit("dup2 outfile error", pipex->fd, pipex->fd_outfile);
+		clean_exit("dup2 outfile error", pipex->pipes[0], pipex->fd_outfile);
 	close(pipex->fd_outfile);
-	close(pipex->fd[0]);
-	close(pipex->fd[1]);
+	close(pipex->pipes[0][0]);
+	close(pipex->pipes[0][1]);
 	do_execve_stuff(pipex->argv[3], pipex->envp);
 }
 

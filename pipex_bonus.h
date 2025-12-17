@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 20:17:03 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 20:30:40 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,11 @@ typedef struct s_pipex
     int fd_infile;
     int fd_outfile;
     int cmd_count;
-    int pid1;   //will be replaced by *pid (points to an array with size cmd_count)
-    int pid2;   //will be replaced by *pid (points to an array with size cmd_count)
-    int fd[2];  //wll be replaced by **pipes (size: [cmd_count - 1][2]
-
+    //int pid1;   //will be replaced by *pid (points to an array with size cmd_count)
+    //int pid2;   //will be replaced by *pid (points to an array with size cmd_count)
+    int *pid;
+    //int fd[2];  //wll be replaced by **pipes (size: [cmd_count - 1][2]
+    int **pipes;
     char **argv;
     char **envp;
 }   t_pipex;
