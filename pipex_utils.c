@@ -6,7 +6,7 @@
 /*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 13:09:50 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/17 13:49:01 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,18 @@ void	do_execve_stuff(char *str, char **envp)
 	if (!strs[0])
 	{
 		free_2d(strs);
-		error_exit("command not found\n", 127);
+		error_exit("command not found", 127);
 	}
 	path = extract_path_from_pathvar(path_var, strs);
 	if (!path)
 	{
 		free_2d(strs);
-		error_exit("Error in do_execve_stuff\n", 127);
+		error_exit("Error in do_execve_stuff", 127);
 	}
 	execve(path, strs, envp);
 	free(path);
 	free_2d(strs);
-	error_exit("execve failed\n", 1);
+	error_exit("execve failed", 1);
 }
 
 char	*extract_pathvar_from_envp(char **envp)
@@ -61,7 +61,7 @@ char	*extract_pathvar_from_envp(char **envp)
 			return (envp[i] + 5);
 		i++;
 	}
-	error_exit("PATH variable not found in ENV variable\n", 127);
+	//error_exit("PATH variable not found in ENV variable", 127);
 	return (NULL);
 }
 
@@ -75,11 +75,16 @@ char	*extract_path_from_pathvar(char *path_var, char **strs)
 
 	if (ft_strchr(strs[0], '/'))
 		return (absolute_path_helper(strs));
+	if (path_var == NULL)
+	{
+		free_2d(strs);
+		error_exit("command not found", 127);
+	}
 	paths = ft_split(path_var, ':');
 	if (!paths)
 	{
 		free_2d(strs);
-		error_exit("error in extract_path_from_pathvar, ft_split failed\n",
+		error_exit("error in extract_path_from_pathvar, ft_split failed",
 			EXIT_FAILURE);
 	}
 	i = 0;
@@ -92,7 +97,7 @@ char	*extract_path_from_pathvar(char *path_var, char **strs)
 	}
 	free_2d(paths);
 	free_2d(strs);
-	error_exit("command not found\n", 127);
+	error_exit("command not found", 127);
 	return (NULL);
 }
 
@@ -101,12 +106,12 @@ char	*absolute_path_helper(char **strs)
 	if (access(strs[0], F_OK) == -1)
 	{
 		free_2d(strs);
-		error_exit("command not found\n", 127);
+		error_exit("command not found", 127);
 	}
 	if (access(strs[0], X_OK) == -1)
 	{
 		free_2d(strs);
-		error_exit("command not executable\n", 126);
+		error_exit("command not executable", 126);
 	}
 	return (ft_strdup(strs[0]));
 }
@@ -120,7 +125,7 @@ char	*check_single_path(char *path, char **paths, char *cmd)
 	if (!path_with_slash)
 	{
 		free_2d(paths);
-		error_exit("error in extract_path_from_pathvar, ft_strjoin failed\n",
+		error_exit("error in extract_path_from_pathvar, ft_strjoin failed",
 			EXIT_FAILURE);
 	}
 	path_to_check = ft_strjoin(path_with_slash, cmd);
@@ -128,7 +133,7 @@ char	*check_single_path(char *path, char **paths, char *cmd)
 	if (!path_to_check)
 	{
 		free_2d(paths);
-		error_exit("error in extract_path_from_pathvar, ft_strjoin failed\n",
+		error_exit("error in extract_path_from_pathvar, ft_strjoin failed",
 			EXIT_FAILURE);
 	}
 	if (access(path_to_check, X_OK) == 0)

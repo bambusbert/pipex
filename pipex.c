@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/16 17:54:40 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 13:49:22 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	pid1 = fork();
 	if (pid1 < 0)
-		error_exit("first fork failed\n", EXIT_FAILURE);
+		error_exit("first fork failed", EXIT_FAILURE);
 	if (pid1 == 0)
 		child_cmd_1(fd, &fd_infile, argv, envp);
 	pid2 = fork();
 	if (pid2 < 0)
-		error_exit("second fork failed\n", EXIT_FAILURE);
+		error_exit("second fork failed", EXIT_FAILURE);
 	if (pid2 == 0)
 		child_cmd_2(fd, &fd_outfile, argv, envp);
 	close(fd[0]);
@@ -66,19 +66,19 @@ int	main(int argc, char **argv, char **envp)
 		2. bits 8-31: exit code / signal - if exited normally
 		(3. bits 32-64: other stuff like how the process was terminated)
 		--> we have to shift bits 8-31 down by 8 bits */
-		// if (WIFEXITED(status))
-		// {
-		// 	return (WEXITSTATUS(status));
-		// }
-		// else if (WIFSIGNALED(status))
-		// {
-		// 	return (128 + WTERMSIG(status));
-		// 		// Shell convention for signal deaths
-		// }
-		// else
-		// {
-		// 	return (1); // Fallback
-		// }
+	// if (WIFEXITED(status))
+	// {
+	// 	return (WEXITSTATUS(status));
+	// }
+	// else if (WIFSIGNALED(status))
+	// {
+	// 	return (128 + WTERMSIG(status));
+	// 		// Shell convention for signal deaths
+	// }
+	// else
+	// {
+	// 	return (1); // Fallback
+	// }
 }
 
 /* child process 1, cmd1
@@ -95,15 +95,15 @@ void	child_cmd_1(int *fd, int *fd_infile, char **argv, char **envp)
 	close(fd[0]);
 	*fd_infile = open(argv[1], O_RDONLY);
 	if (*fd_infile < 0)
-		error_exit("infile could not be opened\n", EXIT_FAILURE);
+		error_exit("infile could not be opened", EXIT_FAILURE);
 	if (dup2(*fd_infile, STDIN_FILENO) < 0)
-		error_exit("dup2 failed in child_cmd1\n", EXIT_FAILURE);
+		error_exit("dup2 failed in child_cmd1", EXIT_FAILURE);
 	if (dup2(fd[1], STDOUT_FILENO) < 0)
-		error_exit("dup2 failed in child_cmd1\n", EXIT_FAILURE);
+		error_exit("dup2 failed in child_cmd1", EXIT_FAILURE);
 	close(*fd_infile);
 	close(fd[1]);
 	do_execve_stuff(argv[2], envp);
-	error_exit("cmd1 failed\n", EXIT_FAILURE);
+	error_exit("cmd1 failed", EXIT_FAILURE);
 }
 
 /* child process 2 - cmd2
@@ -119,21 +119,26 @@ void	child_cmd_2(int *fd, int *fd_outfile, char **argv, char **envp)
 	close(fd[1]);
 	*fd_outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (*fd_outfile < 0)
-		error_exit("outfile could not be opened\n", EXIT_FAILURE);
+		error_exit("outfile could not be opened", EXIT_FAILURE);
 	if (dup2(fd[0], STDIN_FILENO) < 0)
-		error_exit("dup2 failed in child_cmd2\n", EXIT_FAILURE);
+		error_exit("dup2 failed in child_cmd2", EXIT_FAILURE);
 	if (dup2(*fd_outfile, STDOUT_FILENO) < 0)
-		error_exit("dup2 failed in child_cmd2\n", EXIT_FAILURE);
+		error_exit("dup2 failed in child_cmd2", EXIT_FAILURE);
 	close(*fd_outfile);
 	close(fd[0]);
 	do_execve_stuff(argv[3], envp);
-	error_exit("cmd2 failed\n", EXIT_FAILURE);
+	error_exit("cmd2 failed", EXIT_FAILURE);
 }
 
 void	error_exit(char *error_msg, int status)
 {
-	(void)status;
+	//(void)error_msg;
+	if (status == 127)
+		errno = ENOENT; // No such file or directory
+	else if (status == 126)
+		errno = EACCES; // Permission denied
 	perror(error_msg);
+	//perror(NULL);
 	exit(status);
 }
 
