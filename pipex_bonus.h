@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 20:47:27 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 21:42:41 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ typedef struct s_pipex
 	int		fd_infile;
 	int		fd_outfile;
 	int		cmd_count;
-	// int pid1;  
-		//will be replaced by *pid (points to an array with size cmd_count)
-	// int pid2;  
-		//will be replaced by *pid (points to an array with size cmd_count)
+	// int pid1;
+	// will be replaced by *pid (points to an array with size cmd_count)
+	// int pid2;
+	// will be replaced by *pid (points to an array with size cmd_count)
 	int		*pid;
 	// int fd[2];  //wll be replaced by **pipes (size: [cmd_count - 1][2]
 	int		**pipes;
@@ -46,11 +46,13 @@ void		error_exit(char *error_msg, int status);
 char		*check_single_path(char *path, char **paths, char *cmd);
 void		child_cmd_first(t_pipex *pipex);
 void		child_cmd_last(t_pipex *pipex);
+void		child_cmd_middle(t_pipex *pipex, int cmd_count);
 void		child(t_pipex *pipex, int cmd_count);
 int			is_empty(char *str);
 char		*absolute_path_helper(char **strs);
 void		clean_exit(char *msg, int *p_fd, int file_fd);
 int			return_handler(int pid1, int pid2);
 void		custom_error(char *msg, int status);
+void		close_all_pipes(t_pipex *pipex);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 20:59:37 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 21:56:20 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,91 +16,112 @@
 argv[2] = cmd1
 argv[3] = cmd2
 argv[4] = file2 */
-//TODO create one singular child process
+// TODO create one singular child process
 int	main(int argc, char **argv, char **envp)
 {
-	t_pipex pipex;
-	
+	t_pipex	pipex;
+	int		i;
+
 	if (argc < 5)
-		custom_error("wrong input. Correct Input: ./pipex <file1> <cmd1> <cmd2> ... <cmd_n> <file2>", EXIT_FAILURE);
+		custom_error("wrong input. Correct Input: ./pipex <file1> <cmd1> <cmd2> ... <cmd_n> <file2>",
+			EXIT_FAILURE);
 	init_struct(&pipex, argc, argv, envp);
-	if (pipe(pipex.pipes[0]) == -1)
-		custom_error("pipe returned -1", EXIT_FAILURE);
+	for (i = 0; i < pipex.cmd_count - 1; i++)
+	{
+		if (pipe(pipex.pipes[i]) == -1)
+			custom_error("pipe returned -1", EXIT_FAILURE);
+	}
+	// if (pipe(pipex.pipes[0]) == -1)
+	// 	custom_error("pipe returned -1", EXIT_FAILURE);
 	pipex.pid[0] = fork();
 	if (pipex.pid[0] < 0)
 		clean_exit("first fork failed", pipex.pipes[0], -1);
 	if (pipex.pid[0] == 0)
 		child(&pipex, 1);
-
-
-		
-	pipex.pid[1] = fork();
-	if (pipex.pid[1] < 0)
+	i = 1;
+	while (i < pipex.cmd_count - 1)
+	{
+		pipex.pid[i] = fork();
+		if (pipex.pid[i] < 0)
+			clean_exit("middle fork failed", pipex.pipes[i], -1);
+		if (pipex.pid[i] == 0)
+			child(&pipex, i + 1);
+		i++;
+	}
+	pipex.pid[pipex.cmd_count - 1] = fork();
+	if (pipex.pid[pipex.cmd_count - 1] < 0)
 		clean_exit("second fork failed", pipex.pipes[0], -1);
-	if (pipex.pid[1] == 0)
-		child(&pipex, pipex.cmd_count);
-	close(pipex.pipes[0][0]);
-	close(pipex.pipes[0][1]);
-	return return_handler (pipex.pid[0], pipex.pid[1]);
+	if (pipex.pid[pipex.cmd_count - 1] == 0)
+		child(&pipex, i + 1);
+	// close(pipex.pipes[0][0]);
+	// close(pipex.pipes[0][1]);
+	close_all_pipes(&pipex);
+	return (return_handler(pipex.pid[0], pipex.pid[pipex.cmd_count - 1]));
 }
 
-void child (t_pipex *pipex, int cmd_count)
+void	close_all_pipes(t_pipex *pipex)
+{
+	int	i;
+
+	i = 0;
+	while (i <= pipex->cmd_count - 2)
+	{
+		close(pipex->pipes[i][0]);
+		close(pipex->pipes[i][1]);
+		i++;
+	}
+}
+
+void	child(t_pipex *pipex, int cmd_count)
 {
 	if (cmd_count == 1)
-	{
-		//1. cmd
 		child_cmd_first(pipex);
-	}
 	else if (cmd_count == pipex->cmd_count)
-	{
-		//last cmd	
 		child_cmd_last(pipex);
-	}
 	else
 	{
-		//middle cmd
+		child_cmd_middle(pipex, cmd_count);
 	}
 }
 
-//TODO initiailize cmd_count, *pid and **pipes
-void    init_struct (t_pipex *pipex, int argc, char **argv, char **envp)
+// TODO error handling
+void	init_struct(t_pipex *pipex, int argc, char **argv, char **envp)
 {
-	int i;
+	int	i;
 
 	pipex->argc = argc;
 	pipex->argv = argv;
 	pipex->envp = envp;
 	pipex->cmd_count = argc - 3;
-	//dprintf(2, "count cmds: %d\n", pipex->cmd_count);
-	pipex->pid = malloc (sizeof (int) * (pipex->cmd_count - 1));
+	// dprintf(2, "count cmds: %d\n", pipex->cmd_count);
+	pipex->pid = malloc(sizeof(int) * (pipex->cmd_count));
 	if (!pipex->pid)
 	{
-		//error handling
+		// error handling
 	}
-	//dprintf(2, "count pipes: %d\n", pipex->cmd_count - 1);
-	pipex->pipes = malloc (sizeof(int*) * (pipex->cmd_count - 1));
+	// dprintf(2, "count pipes: %d\n", pipex->cmd_count - 1);
+	pipex->pipes = malloc(sizeof(int *) * (pipex->cmd_count - 1));
 	if (!pipex->pipes)
 	{
-		//error handling
+		// error handling
 	}
 	i = 0;
 	while (i < pipex->cmd_count - 1)
 	{
-		pipex->pipes[i] = malloc (sizeof (int) * 2);
+		pipex->pipes[i] = malloc(sizeof(int) * 2);
 		if (!pipex->pipes[i])
 		{
-			//error handling
+			// error handling
 		}
 		i++;
 	}
 }
 
-
 int	return_handler(int pid1, int pid2)
 {
-	int exit_code;
+	int	exit_code;
 	int	status;
-	
+
 	exit_code = 0;
 	pid1 = wait(&status);
 	while (pid1 != -1)
@@ -126,15 +147,14 @@ X. close fds that are not used and pipe ends */
 void	child_cmd_first(t_pipex *pipex)
 {
 	pipex->fd_infile = open(pipex->argv[1], O_RDONLY);
-	if (pipex->fd_infile  < 0)
+	if (pipex->fd_infile < 0)
 		clean_exit("infile error", pipex->pipes[0], -1);
 	if (dup2(pipex->fd_infile, STDIN_FILENO) < 0)
-		clean_exit("dup2 infile error", pipex->pipes[0], pipex->fd_infile );
+		clean_exit("dup2 infile error", pipex->pipes[0], pipex->fd_infile);
 	if (dup2(pipex->pipes[0][1], STDOUT_FILENO) < 0)
-		clean_exit("dup2 pipe error", pipex->pipes[0], pipex->fd_infile );
+		clean_exit("dup2 pipe error", pipex->pipes[0], pipex->fd_infile);
 	close(pipex->fd_infile);
-	close(pipex->pipes[0][0]);
-	close(pipex->pipes[0][1]);
+	close_all_pipes(pipex);
 	do_execve_stuff(pipex->argv[2], pipex->envp);
 }
 
@@ -148,17 +168,41 @@ close writing end of pipe
 X. close fds that are not used and pipe ends */
 void	child_cmd_last(t_pipex *pipex)
 {
-	pipex->fd_outfile = open(pipex->argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	pipex->fd_outfile = open(pipex->argv[pipex->argc - 1],
+			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (pipex->fd_outfile < 0)
-		clean_exit("outfile error", pipex->pipes[0], -1);
-	if (dup2(pipex->pipes[0][0], STDIN_FILENO) < 0)
-		clean_exit("dup2 pipe error", pipex->pipes[0], pipex->fd_outfile);
+		clean_exit("outfile error", pipex->pipes[pipex->cmd_count - 2], -1);
+	if (dup2(pipex->pipes[pipex->cmd_count - 2][0], STDIN_FILENO) < 0)
+		clean_exit("dup2 pipe error", pipex->pipes[pipex->cmd_count - 2],
+			pipex->fd_outfile);
 	if (dup2(pipex->fd_outfile, STDOUT_FILENO) < 0)
-		clean_exit("dup2 outfile error", pipex->pipes[0], pipex->fd_outfile);
+		clean_exit("dup2 outfile error", pipex->pipes[pipex->cmd_count - 2],
+			pipex->fd_outfile);
 	close(pipex->fd_outfile);
-	close(pipex->pipes[0][0]);
-	close(pipex->pipes[0][1]);
-	do_execve_stuff(pipex->argv[3], pipex->envp);
+	close_all_pipes(pipex);
+	do_execve_stuff(pipex->argv[pipex->argc - 2], pipex->envp);
+}
+
+void	child_cmd_middle(t_pipex *pipex, int cmd_count)
+{
+	int	in_pipe;
+	int	out_pipe;
+	int	i;
+
+	in_pipe = cmd_count - 2;
+	out_pipe = cmd_count - 1;
+	if (dup2(pipex->pipes[in_pipe][0], STDIN_FILENO) < 0)
+		clean_exit("dup2 pipe error", pipex->pipes[in_pipe], -1);
+	if (dup2(pipex->pipes[out_pipe][1], STDOUT_FILENO) < 0)
+		clean_exit("dup2 outfile error", pipex->pipes[out_pipe], -1);
+	i = 0;
+	while (i < pipex->cmd_count - 1)
+	{
+		close(pipex->pipes[i][0]);
+		close(pipex->pipes[i][1]);
+		i++;
+	}
+	do_execve_stuff(pipex->argv[cmd_count + 1], pipex->envp);
 }
 
 void	error_exit(char *error_msg, int status)
@@ -184,7 +228,7 @@ void	clean_exit(char *msg, int *p_fd, int file_fd)
 	exit(EXIT_FAILURE);
 }
 
-void custom_error (char *msg, int status)
+void	custom_error(char *msg, int status)
 {
 	ft_putstr_fd(msg, STDERR_FILENO);
 	ft_putstr_fd("\n", STDERR_FILENO);

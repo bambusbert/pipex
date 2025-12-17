@@ -8,6 +8,7 @@ file2.txt
 libft
 Makefile
 NON
+NOT
 pipex
 pipex_bonus.c
 pipex_bonus.h
@@ -25,4 +26,12 @@ pwd
 sleep 3
 tester_pipex (Copy).sh
 tester_pipex.sh
+vgcore.76434
+vgcore.78148
+vgcore.78149
+vgcore.78150
+vgcore.78152
+vgcore.81236
+vgcore.81237
+vgcore.81238
 vlg.txt
