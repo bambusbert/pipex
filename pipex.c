@@ -6,7 +6,7 @@
 /*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 16:29:02 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/17 17:45:59 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ int	main(int argc, char **argv, char **envp)
 	int	pid2;
 
 	if (argc != 5)
-		return (1);
+		custom_error("wrong input. Correct Input: ./pipex <file1> <cmd1> <cmd2> <file2>", EXIT_FAILURE);
 	if (pipe(fd) == -1)
-		return (1);
+		custom_error("pipe returned -1", EXIT_FAILURE);
 	pid1 = fork();
 	if (pid1 < 0)
 		clean_exit("first fork failed", fd, -1);
@@ -131,4 +131,11 @@ void	clean_exit(char *msg, int *p_fd, int file_fd)
 		close(file_fd);
 	perror(msg);
 	exit(EXIT_FAILURE);
+}
+
+void custom_error (char *msg, int status)
+{
+	ft_putstr_fd(msg, STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
+	exit(status);
 }

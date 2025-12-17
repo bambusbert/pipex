@@ -6,13 +6,13 @@
 /*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 16:39:21 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/17 17:45:15 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft/libft.h"
 #include <errno.h>
-//#include <stdio.h> //TODO remove
+#include <stdio.h>
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -29,3 +29,4 @@ int		is_empty(char *str);
 char	*absolute_path_helper(char **strs);
 void	clean_exit(char *msg, int *p_fd, int file_fd);
 int		return_handler(int pid1, int pid2);
+void	custom_error(char *msg, int status);

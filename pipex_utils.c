@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 14:23:18 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 16:41:24 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ void	free_2d(char **strs)
 	free(strs);
 }
 
+//TODO remove, currently unused
 int	is_empty(char *str)
 {
 	int	i;
