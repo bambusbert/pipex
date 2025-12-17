@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 14:18:04 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 14:37:26 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ int	main(int argc, char **argv, char **envp)
 	int	fd[2];
 	int	pid1;
 	int	pid2;
-	int	fd_infile;
-	int	fd_outfile;
 	int	status;
 
 	if (argc != 5)
@@ -31,24 +29,21 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	pid1 = fork();
 	if (pid1 < 0)
-		error_exit("first fork failed", EXIT_FAILURE);
+		clean_exit("first fork failed", fd, -1);
 	if (pid1 == 0)
-		child_cmd_1(fd, &fd_infile, argv, envp);
+		child_cmd_1(fd, argv, envp);
 	pid2 = fork();
 	if (pid2 < 0)
-		error_exit("second fork failed", EXIT_FAILURE);
+		clean_exit("second fork failed", fd, -1);
 	if (pid2 == 0)
-		child_cmd_2(fd, &fd_outfile, argv, envp);
+		child_cmd_2(fd, argv, envp);
 	close(fd[0]);
 	close(fd[1]);
 	waitpid(pid1, NULL, 0);
 	waitpid(pid2, &status, 0);
-
-if (WIFEXITED(status))
-	return (WEXITSTATUS(status));
-if (WIFSIGNALED(status))
-	return (128 + WTERMSIG(status));
-return (1);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	return (1);
 }
 
 /* child process 1, cmd1
@@ -60,20 +55,21 @@ to test if that stuff works just comment out this line (output goes into stdout)
 3. execute cmd1 (execve)
 4. close infile
 X. close fds that are not used and pipe ends */
-void	child_cmd_1(int *fd, int *fd_infile, char **argv, char **envp)
+void	child_cmd_1(int *fd, char **argv, char **envp)
 {
-	close(fd[0]);
-	*fd_infile = open(argv[1], O_RDONLY);
-	if (*fd_infile < 0)
-		error_exit("infile could not be opened", EXIT_FAILURE);
-	if (dup2(*fd_infile, STDIN_FILENO) < 0)
-		error_exit("dup2 failed in child_cmd1", EXIT_FAILURE);
+	int	file;
+
+	file = open(argv[1], O_RDONLY);
+	if (file < 0)
+		clean_exit("infile error", fd, -1);
+	if (dup2(file, STDIN_FILENO) < 0)
+		clean_exit("dup2 infile error", fd, file);
 	if (dup2(fd[1], STDOUT_FILENO) < 0)
-		error_exit("dup2 failed in child_cmd1", EXIT_FAILURE);
-	close(*fd_infile);
+		clean_exit("dup2 pipe error", fd, file);
+	close(file);
+	close(fd[0]);
 	close(fd[1]);
 	do_execve_stuff(argv[2], envp);
-	error_exit("cmd1 failed", EXIT_FAILURE);
 }
 
 /* child process 2 - cmd2
@@ -84,20 +80,21 @@ close writing end of pipe
 3. execute cmd2 (execve)
 4. close outfile
 X. close fds that are not used and pipe ends */
-void	child_cmd_2(int *fd, int *fd_outfile, char **argv, char **envp)
+void	child_cmd_2(int *fd, char **argv, char **envp)
 {
-	close(fd[1]);
-	*fd_outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (*fd_outfile < 0)
-		error_exit("outfile could not be opened", EXIT_FAILURE);
+	int	file;
+
+	file = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (file < 0)
+		clean_exit("outfile error", fd, -1);
 	if (dup2(fd[0], STDIN_FILENO) < 0)
-		error_exit("dup2 failed in child_cmd2", EXIT_FAILURE);
-	if (dup2(*fd_outfile, STDOUT_FILENO) < 0)
-		error_exit("dup2 failed in child_cmd2", EXIT_FAILURE);
-	close(*fd_outfile);
+		clean_exit("dup2 pipe error", fd, file);
+	if (dup2(file, STDOUT_FILENO) < 0)
+		clean_exit("dup2 outfile error", fd, file);
+	close(file);
 	close(fd[0]);
+	close(fd[1]);
 	do_execve_stuff(argv[3], envp);
-	error_exit("cmd2 failed", EXIT_FAILURE);
 }
 
 void	error_exit(char *error_msg, int status)
@@ -117,4 +114,17 @@ void	error_exit2(char *error_msg, int status)
 	printf("%s\n", error_msg);
 	strerror(errno);
 	exit(status);
+}
+
+void	clean_exit(char *msg, int *p_fd, int file_fd)
+{
+	if (p_fd)
+	{
+		close(p_fd[0]);
+		close(p_fd[1]);
+	}
+	if (file_fd != -1)
+		close(file_fd);
+	perror(msg);
+	exit(EXIT_FAILURE);
 }

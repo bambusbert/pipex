@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 12:51:03 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/17 14:37:12 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	free_2d(char **strs);
 void	error_exit(char *error_msg, int status);
 void	error_exit2(char *error_msg, int status);
 char	*check_single_path(char *path, char **paths, char *cmd);
-void	child_cmd_1(int *fd, int *fd_infile, char **argv, char **envp);
-void	child_cmd_2(int *fd, int *fd_outfile, char **argv, char **envp);
+void	child_cmd_1(int *fd, char **argv, char **envp);
+void	child_cmd_2(int *fd, char **argv, char **envp);
 int		is_empty(char *str);
 char	*absolute_path_helper(char **strs);
+void    clean_exit(char *msg, int *p_fd, int file_fd);
