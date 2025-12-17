@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/16 18:15:45 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 12:48:15 by bert             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	do_execve_stuff(char *str, char **envp)
 		free_2d(strs);
 		error_exit("command not found\n", 127);
 	}
-	path = extract_path_from_pathvar(path_var, strs[0]);
+	path = extract_path_from_pathvar(path_var, strs);
 	if (!path)
 	{
 		free_2d(strs);
@@ -68,33 +68,43 @@ char	*extract_pathvar_from_envp(char **envp)
 
 /* this function extracts the correct path from the path vars. the correct path
 is the path where a file with the same name as cmd is found */
-char	*extract_path_from_pathvar(char *path_var, char *cmd)
+char	*extract_path_from_pathvar(char *path_var, char **strs)
 {
 	char	**paths;
 	char	*checked_path;
 	int		i;
 
-	if (ft_strchr(cmd, '/'))
+	if (ft_strchr(strs[0], '/'))
 	{
-		if (access(cmd, F_OK) == -1)
+		if (access(strs[0], F_OK) == -1)
+		{
+			free_2d(strs);
 			error_exit("command not found\n", 127);
-		if (access(cmd, X_OK) == -1)
+		}
+		if (access(strs[0], X_OK) == -1)
+		{
+			free_2d(strs);	
 			error_exit("command not executable\n", 126);
-		return (ft_strdup(cmd));
+		}
+		return (ft_strdup(strs[0]));
 	}
 	paths = ft_split(path_var, ':');
 	if (!paths)
+	{
+		free_2d(strs);
 		error_exit("error in extract_path_from_pathvar, ft_split failed\n",
 			EXIT_FAILURE);
+	}
 	i = 0;
 	while (paths[i])
 	{
-		checked_path = check_single_path(paths[i], paths, cmd);
+		checked_path = check_single_path(paths[i], paths, strs[0]);
 		if (checked_path)
 			return (checked_path);
 		i++;
 	}
 	free_2d(paths);
+	free_2d(strs);	
 	error_exit("command not found\n", 127);
 	return (NULL);
 }
