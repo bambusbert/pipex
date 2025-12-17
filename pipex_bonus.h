@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 21:42:41 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/17 21:58:50 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,6 @@ void		clean_exit(char *msg, int *p_fd, int file_fd);
 int			return_handler(int pid1, int pid2);
 void		custom_error(char *msg, int status);
 void		close_all_pipes(t_pipex *pipex);
+void	init_pipes(t_pipex *pipex);
 
 #endif
