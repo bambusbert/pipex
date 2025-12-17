@@ -1,2 +1,0 @@
-USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-slambert   40412  0.0  0.0      0     0 pts/1    Z+   14:39   0:00 [sleep] <defunct>
