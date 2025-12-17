@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bert <bert@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: slambert <slambert@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 13:49:22 by bert             ###   ########.fr       */
+/*   Updated: 2025/12/17 14:18:04 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,42 +43,12 @@ int	main(int argc, char **argv, char **envp)
 	close(fd[1]);
 	waitpid(pid1, NULL, 0);
 	waitpid(pid2, &status, 0);
-	//#define WEXITSTATUS(status) (((status) >> 8) & 0xFF)
-	// return (WEXITSTATUS(status));
-	// TODO abhängig davon ob gekillt wurde (WIFEXITED):
-	/* 		if (WIFEXITED(status)) {
-		// Child exited normally (grep with no matches, etc.)
-		return (WEXITSTATUS(status));  // Returns 1 for grep no matches
-	}
-	else if (WIFSIGNALED(status)) {
-		// Child was killed by signal (SIGSEGV, SIGKILL, etc.)
-		// Shell convention: return 128 + signal number
-		return (128 + WTERMSIG(status));
-	}
-	else {
-		// Some other case (stopped, continued, etc.)
-		return (1);
-	} */
-	// return (((status) >> 8) & 0xFF);
+
+if (WIFEXITED(status))
 	return (WEXITSTATUS(status));
-	/* 	in the variable status there are actually 2 things stored
-		1. first 0-7 bits: signal number - ONLY IF KILLED
-		2. bits 8-31: exit code / signal - if exited normally
-		(3. bits 32-64: other stuff like how the process was terminated)
-		--> we have to shift bits 8-31 down by 8 bits */
-	// if (WIFEXITED(status))
-	// {
-	// 	return (WEXITSTATUS(status));
-	// }
-	// else if (WIFSIGNALED(status))
-	// {
-	// 	return (128 + WTERMSIG(status));
-	// 		// Shell convention for signal deaths
-	// }
-	// else
-	// {
-	// 	return (1); // Fallback
-	// }
+if (WIFSIGNALED(status))
+	return (128 + WTERMSIG(status));
+return (1);
 }
 
 /* child process 1, cmd1
