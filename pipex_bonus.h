@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 21:58:50 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/18 13:36:44 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,23 @@ typedef struct s_pipex
 }			t_pipex;
 
 void		init_struct(t_pipex *pipex, int argc, char **argv, char **envp);
-void		do_execve_stuff(char *str, char **envp);
+void		do_execve_stuff(char *str, char **envp, t_pipex *pipex);
 char		*extract_pathvar_from_envp(char **envp);
-char		*extract_path_from_pathvar(char *path_var, char **strs);
+char		*extract_path_from_pathvar(char *path_var, char **strs, t_pipex *pipex);
 void		free_2d(char **strs);
-void		error_exit(char *error_msg, int status);
-char		*check_single_path(char *path, char **paths, char *cmd);
+void		error_exit(char *error_msg, int status, t_pipex *pipex);
+char		*check_single_path(char *path, char **paths, char *cmd, t_pipex *pipex);
 void		child_cmd_first(t_pipex *pipex);
 void		child_cmd_last(t_pipex *pipex);
 void		child_cmd_middle(t_pipex *pipex, int cmd_count);
 void		child(t_pipex *pipex, int cmd_count);
 int			is_empty(char *str);
-char		*absolute_path_helper(char **strs);
-void		clean_exit(char *msg, int *p_fd, int file_fd);
+char		*absolute_path_helper(char **strs, t_pipex *pipex);
+void		clean_exit(char *msg, int *p_fd, int file_fd, t_pipex *pipex);
 int			return_handler(int pid1, int pid2);
 void		custom_error(char *msg, int status);
 void		close_all_pipes(t_pipex *pipex);
-void	init_pipes(t_pipex *pipex);
+void		free_stuff(t_pipex *pipex);
+void		init_pipes(t_pipex *pipex);
 
 #endif

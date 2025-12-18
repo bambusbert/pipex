@@ -6,7 +6,7 @@
 #    By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/11 13:28:23 by slambert          #+#    #+#              #
-#    Updated: 2025/12/17 20:53:09 by slambert         ###   ########.fr        #
+#    Updated: 2025/12/18 14:37:38 by slambert         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,8 @@ NAME = pipex
 SRC =	pipex.c pipex_utils.c
 BONUS_SRC = pipex_bonus.c pipex_utils_bonus.c
 
-#OBJS = ${SRC:.c=.o}
-OBJS = $(BONUS_SRC:.c=.o)
+OBJS = ${SRC:.c=.o}
+#OBJS = $(BONUS_SRC:.c=.o)
 BONUS_OBJS = $(BONUS_SRC:.c=.o)
 
 CC = cc
