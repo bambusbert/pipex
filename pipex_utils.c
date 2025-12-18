@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/17 18:16:14 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/18 17:02:29 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,6 @@ void	do_execve_stuff(char *str, char **envp)
 	error_exit("execve failed", 1);
 }
 
-char	*extract_pathvar_from_envp(char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp[i])
-	{
-		if (!ft_strncmp(envp[i], "PATH=", 5))
-			return (envp[i] + 5);
-		i++;
-	}
-	//error_exit("PATH variable not found in ENV variable", 127);
-	return (NULL);
-}
-
 /* this function extracts the correct path from the path vars. the correct path
 is the path where a file with the same name as cmd is found */
 char	*extract_path_from_pathvar(char *path_var, char **strs)
@@ -75,43 +60,35 @@ char	*extract_path_from_pathvar(char *path_var, char **strs)
 	if (ft_strchr(strs[0], '/'))
 		return (absolute_path_helper(strs));
 	if (path_var == NULL)
-	{
-		free_2d(strs);
-		error_exit("command not found", 127);
-	}
+		free2d_and_error_exit(strs, "command not found", 127);
 	paths = ft_split(path_var, ':');
 	if (!paths)
-	{
-		free_2d(strs);
-		error_exit("error in extract_path_from_pathvar, ft_split failed",
-			EXIT_FAILURE);
-	}
-	i = 0;
-	while (paths[i])
+		free2d_and_error_exit(strs, "error in extract_path_from_pathvar \
+			ft_split failed", EXIT_FAILURE);
+	i = -1;
+	while (paths[++i])
 	{
 		checked_path = check_single_path(paths[i], paths, strs[0]);
 		if (checked_path)
 			return (checked_path);
-		i++;
 	}
 	free_2d(paths);
-	free_2d(strs);
-	error_exit("command not found", 127);
+	free2d_and_error_exit(strs, "command not found", 127);
 	return (NULL);
+}
+
+void	free2d_and_error_exit(char **arr, char *error_msg, int status)
+{
+	free_2d(arr);
+	error_exit(error_msg, status);
 }
 
 char	*absolute_path_helper(char **strs)
 {
 	if (access(strs[0], F_OK) == -1)
-	{
-		free_2d(strs);
-		error_exit("command not found", 127);
-	}
+		free2d_and_error_exit(strs, "command not found", 127);
 	if (access(strs[0], X_OK) == -1)
-	{
-		free_2d(strs);
-		error_exit("command not executable", 126);
-	}
+		free2d_and_error_exit(strs, "command not executable", 126);
 	return (ft_strdup(strs[0]));
 }
 
@@ -142,36 +119,4 @@ char	*check_single_path(char *path, char **paths, char *cmd)
 	}
 	free(path_to_check);
 	return (NULL);
-}
-
-void	free_2d(char **strs)
-{
-	int	i;
-
-	if (!strs)
-		return ;
-	i = 0;
-	while (strs[i])
-	{
-		free(strs[i]);
-		i++;
-	}
-	free(strs);
-}
-
-//TODO remove, currently unused
-int	is_empty(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' || str[i] == '\r'
-			|| str[i] == '\f' || str[i] == '\v')
-			i++;
-		else
-			return (0);
-	}
-	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/18 14:45:15 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/18 16:54:03 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@ argv[3] = cmd2
 argv[4] = file2 */
 int	main(int argc, char **argv, char **envp)
 {
-	t_pipex pipex;
-	
+	t_pipex	pipex;
+
 	if (argc != 5)
-		custom_error("wrong input. Correct Input: ./pipex <file1> <cmd1> <cmd2> ... <cmd_n> <file2>", EXIT_FAILURE);
+		custom_error("wrong input. Correct Input: ./pipex <file1> \
+			 <cmd1> <cmd2> ... <cmd_n> <file2>", EXIT_FAILURE);
 	init_struct(&pipex, argc, argv, envp);
 	if (pipe(pipex.fd) == -1)
-		custom_error("pipe returned -1", EXIT_FAILURE);
+		clean_exit("pipe returned -1", pipex.fd, -1);
 	pipex.pid1 = fork();
 	if (pipex.pid1 < 0)
 		clean_exit("first fork failed", pipex.fd, -1);
@@ -37,32 +38,7 @@ int	main(int argc, char **argv, char **envp)
 		child_cmd_2(&pipex);
 	close(pipex.fd[0]);
 	close(pipex.fd[1]);
-	return return_handler (pipex.pid1, pipex.pid2);
-}
-
-void    init_struct (t_pipex *pipex, int argc, char **argv, char **envp)
-{
-	pipex->argc = argc;
-	pipex->argv = argv;
-	pipex->envp = envp;
-}
-
-int	return_handler(int pid1, int pid2)
-{
-	int exit_code;
-	int	status;
-	
-	exit_code = 0;
-	pid1 = wait(&status);
-	while (pid1 != -1)
-	{
-		if (pid1 == pid2)
-			exit_code = status;
-		pid1 = wait(&status);
-	}
-	if (WIFEXITED(exit_code))
-		return (WEXITSTATUS(exit_code));
-	return (EXIT_FAILURE);
+	return (return_handler(pipex.pid1, pipex.pid2));
 }
 
 /* child process 1, cmd1
@@ -77,12 +53,12 @@ X. close fds that are not used and pipe ends */
 void	child_cmd_1(t_pipex *pipex)
 {
 	pipex->fd_infile = open(pipex->argv[1], O_RDONLY);
-	if (pipex->fd_infile  < 0)
+	if (pipex->fd_infile < 0)
 		clean_exit("infile error", pipex->fd, -1);
 	if (dup2(pipex->fd_infile, STDIN_FILENO) < 0)
-		clean_exit("dup2 infile error", pipex->fd, pipex->fd_infile );
+		clean_exit("dup2 infile error", pipex->fd, pipex->fd_infile);
 	if (dup2(pipex->fd[1], STDOUT_FILENO) < 0)
-		clean_exit("dup2 pipe error", pipex->fd, pipex->fd_infile );
+		clean_exit("dup2 pipe error", pipex->fd, pipex->fd_infile);
 	close(pipex->fd_infile);
 	close(pipex->fd[0]);
 	close(pipex->fd[1]);
@@ -99,7 +75,8 @@ close writing end of pipe
 X. close fds that are not used and pipe ends */
 void	child_cmd_2(t_pipex *pipex)
 {
-	pipex->fd_outfile = open(pipex->argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	pipex->fd_outfile = open(pipex->argv[4], O_WRONLY | O_CREAT | O_TRUNC,
+			0644);
 	if (pipex->fd_outfile < 0)
 		clean_exit("outfile error", pipex->fd, -1);
 	if (dup2(pipex->fd[0], STDIN_FILENO) < 0)
@@ -133,11 +110,4 @@ void	clean_exit(char *msg, int *p_fd, int file_fd)
 		close(file_fd);
 	perror(msg);
 	exit(EXIT_FAILURE);
-}
-
-void custom_error (char *msg, int status)
-{
-	ft_putstr_fd(msg, STDERR_FILENO);
-	ft_putstr_fd("\n", STDERR_FILENO);
-	exit(status);
 }
