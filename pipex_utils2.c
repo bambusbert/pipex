@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 16:45:35 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/18 17:02:32 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/19 14:10:01 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@ void	init_struct(t_pipex *pipex, int argc, char **argv, char **envp)
 	pipex->argc = argc;
 	pipex->argv = argv;
 	pipex->envp = envp;
+	pipex->fd_infile = -1;
+	pipex->fd_outfile = -1;
+	pipex->pid1 = -1;
+	pipex->pid2 = -1;
 }
 
 int	return_handler(int pid1, int pid2)

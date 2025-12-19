@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/19 13:55:02 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/19 14:24:37 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void		child_cmd_first(t_pipex *pipex);
 void		child_cmd_last(t_pipex *pipex);
 void		child_cmd_middle(t_pipex *pipex, int cmd_count);
 void		child(t_pipex *pipex, int cmd_count);
-int			is_empty(char *str);
 char		*absolute_path_helper(char **strs, t_pipex *pipex);
 void		clean_exit(char *msg, int *p_fd, int file_fd, t_pipex *pipex);
 int			return_handler(int pid1, int pid2);

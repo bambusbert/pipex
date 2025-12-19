@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/18 16:58:10 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/19 14:24:33 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void		error_exit(char *error_msg, int status);
 char		*check_single_path(char *path, char **paths, char *cmd);
 void		child_cmd_1(t_pipex *pipex);
 void		child_cmd_2(t_pipex *pipex);
-int			is_empty(char *str);
 char		*absolute_path_helper(char **strs);
 void		clean_exit(char *msg, int *p_fd, int file_fd);
 int			return_handler(int pid1, int pid2);
