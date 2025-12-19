@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils_bonus.c                                :+:      :+:    :+:   */
+/*   pipex_utils1_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/18 14:19:10 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/19 13:58:09 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ var2: char* argv[]: contains the program to be launched and its flags
 			argv[n+1]: NULL
 var3: envp: thats an array of string pointing to the environment paths.
 this variable gets set automatically from main and is passed through*/
-// TODO handle empty command ("")
 void	do_execve_stuff(char *str, char **envp, t_pipex *pipex)
 {
 	char	*path_var;
@@ -60,7 +59,6 @@ char	*extract_pathvar_from_envp(char **envp)
 			return (envp[i] + 5);
 		i++;
 	}
-	//error_exit("PATH variable not found in ENV variable", 127);
 	return (NULL);
 }
 
@@ -75,17 +73,11 @@ char	*extract_path_from_pathvar(char *path_var, char **strs, t_pipex *pipex)
 	if (ft_strchr(strs[0], '/'))
 		return (absolute_path_helper(strs, pipex));
 	if (path_var == NULL)
-	{
-		free_2d(strs);
-		error_exit("command not found", 127, pipex);
-	}
+		free2d_and_error_exit(strs, "command not found", 127, pipex);
 	paths = ft_split(path_var, ':');
 	if (!paths)
-	{
-		free_2d(strs);
-		error_exit("error in extract_path_from_pathvar, ft_split failed",
-			EXIT_FAILURE, pipex);
-	}
+		free2d_and_error_exit(strs, "error in extract_path_from_pathvar, \
+			ft_split failed", EXIT_FAILURE, pipex);
 	i = 0;
 	while (paths[i])
 	{
@@ -95,8 +87,7 @@ char	*extract_path_from_pathvar(char *path_var, char **strs, t_pipex *pipex)
 		i++;
 	}
 	free_2d(paths);
-	free_2d(strs);
-	error_exit("command not found", 127, pipex);
+	free2d_and_error_exit(strs, "command not found", 127, pipex);
 	return (NULL);
 }
 
@@ -142,36 +133,4 @@ char	*check_single_path(char *path, char **paths, char *cmd, t_pipex *pipex)
 	}
 	free(path_to_check);
 	return (NULL);
-}
-
-void	free_2d(char **strs)
-{
-	int	i;
-
-	if (!strs)
-		return ;
-	i = 0;
-	while (strs[i])
-	{
-		free(strs[i]);
-		i++;
-	}
-	free(strs);
-}
-
-//TODO remove, currently unused
-int	is_empty(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' || str[i] == '\r'
-			|| str[i] == '\f' || str[i] == '\v')
-			i++;
-		else
-			return (0);
-	}
-	return (1);
 }
