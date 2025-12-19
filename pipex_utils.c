@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/18 17:02:29 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/18 17:22:13 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ var2: char* argv[]: contains the program to be launched and its flags
 			argv[n+1]: NULL
 var3: envp: thats an array of string pointing to the environment paths.
 this variable gets set automatically from main and is passed through*/
-// TODO handle empty command ("")
 void	do_execve_stuff(char *str, char **envp)
 {
 	char	*path_var;

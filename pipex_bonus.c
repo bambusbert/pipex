@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/18 14:16:15 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/19 13:35:51 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,18 +224,18 @@ void	error_exit(char *error_msg, int status, t_pipex *pipex)
 	exit(status);
 }
 
-void	clean_exit(char *msg, int *p_fd, int file_fd, t_pipex *pipex)
+void    clean_exit(char *msg, int *p_fd, int file_fd, t_pipex *pipex)
 {
-	free_stuff(pipex);
-	if (p_fd)
-	{
-		close(p_fd[0]);
-		close(p_fd[1]);
-	}
-	if (file_fd != -1)
-		close(file_fd);
-	perror(msg);
-	exit(EXIT_FAILURE);
+    if (p_fd)
+    {
+        close(p_fd[0]);
+        close(p_fd[1]);
+    }
+    if (file_fd != -1)
+        close(file_fd);
+    free_stuff(pipex);
+    perror(msg);
+    exit(EXIT_FAILURE);
 }
 
 void	custom_error(char *msg, int status)
