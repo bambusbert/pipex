@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/19 14:26:09 by slambert         ###   ########.fr       */
+/*   Updated: 2025/12/19 14:35:20 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv, char **envp)
 	t_pipex	pipex;
 
 	if (argc != 5)
-		custom_error("wrong input. Correct Input: ./pipex <file1> \
+		custom_error("wrong input . Correct Input: ./pipex <file1> \
 			 <cmd1> <cmd2> ... <cmd_n> <file2>", EXIT_FAILURE);
 	init_struct(&pipex, argc, argv, envp);
 	if (pipe(pipex.fd) == -1)
