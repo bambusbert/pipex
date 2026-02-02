@@ -6,10 +6,12 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/19 14:35:20 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/02 11:51:48 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
+//TODO readme.md
 #include "pipex.h"
 
 /* argv[1] = file1
