@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/19 14:23:28 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/03 11:47:32 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*extract_path_from_pathvar(char *path_var, char **strs)
 	paths = ft_split(path_var, ':');
 	if (!paths)
 		free2d_and_error_exit(strs,
-								"error in extract_path_from_pathvar \
+			"error in extract_path_from_pathvar, \
 			ft_split failed", EXIT_FAILURE);
 	i = -1;
 	while (paths[++i])
@@ -92,12 +92,13 @@ char	*check_single_path(char *path, char **paths, char *cmd)
 
 	path_with_slash = ft_strjoin(path, "/");
 	if (!path_with_slash)
-		free2d_and_error_exit(paths, "error in extract_path_from_pathvar,\
+		free2d_and_error_exit(paths, "error in extract_path_from_pathvar, \
 			ft_strjoin failed", EXIT_FAILURE);
 	path_to_check = ft_strjoin(path_with_slash, cmd);
 	free(path_with_slash);
 	if (!path_to_check)
-		free2d_and_error_exit(paths, "error in extract_path_from_pathvar,\
+		free2d_and_error_exit(paths,
+			"error in extract_path_from_pathvar,\
 			ft_strjoin failed", EXIT_FAILURE);
 	if (access(path_to_check, X_OK) == 0)
 	{

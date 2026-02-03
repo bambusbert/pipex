@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 13:51:50 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/19 13:59:10 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/03 11:10:45 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	free2d_and_error_exit(char **arr, char *error_msg, int status,
 
 void	error_exit(char *error_msg, int status, t_pipex *pipex)
 {
+	close_all_pipes(pipex);
 	free_stuff(pipex);
 	if (status == 127)
 		errno = ENOENT;

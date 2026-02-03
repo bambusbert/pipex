@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/19 13:59:45 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/19 14:02:11 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/03 11:29:15 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	init_pipes(t_pipex *pipex)
 	}
 }
 
-// TODO error handling??
 void	init_struct(t_pipex *pipex, int argc, char **argv, char **envp)
 {
 	int	i;
@@ -56,11 +55,18 @@ void	close_all_pipes(t_pipex *pipex)
 {
 	int	i;
 
+	if (!pipex || !pipex->pipes)
+		return ;
 	i = 0;
-	while (i <= pipex->cmd_count - 2)
+	while (i < pipex->cmd_count - 1)
 	{
-		close(pipex->pipes[i][0]);
-		close(pipex->pipes[i][1]);
+		if (pipex->pipes[i])
+		{
+			if (pipex->pipes[i][0] >= 0)
+				close(pipex->pipes[i][0]);
+			if (pipex->pipes[i][1] >= 0)
+				close(pipex->pipes[i][1]);
+		}
 		i++;
 	}
 }
@@ -71,7 +77,7 @@ void	free_stuff(t_pipex *pipex)
 
 	free(pipex->pid);
 	i = 0;
-	while (i < pipex->cmd_count - 1)
+	while (pipex->pipes && i < pipex->cmd_count - 1)
 	{
 		free(pipex->pipes[i]);
 		i++;

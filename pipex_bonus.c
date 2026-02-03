@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/19 14:01:51 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/03 10:27:51 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 argv[2] = cmd1
 argv[3] = cmd2
 argv[4] = file2 */
-// TODO create one singular child process
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	pipex;
