@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/04 17:24:25 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/04 17:46:42 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ void	error_exit(char *error_msg, int status, int free_msg)
 {
 	if (status == 127)
 	{
-		//if there is a slash "/" in the error message, it is no such file or directory: 
 		if (error_msg[0] == '/')
 			ft_putstr_fd("no such file or directory: ", STDERR_FILENO);
 		else
@@ -107,7 +106,14 @@ void	error_exit(char *error_msg, int status, int free_msg)
 		exit(status);
 	}
 	if (status == 126)
+	{
+		ft_putstr_fd("permission denied: ", STDERR_FILENO);
+		if (error_msg)
+			ft_putstr_fd(error_msg, STDERR_FILENO);
+		ft_putstr_fd("\n", STDERR_FILENO);
 		errno = EACCES;
+		exit (status);
+	}
 	perror(error_msg);
 	if (free_msg)
 		free(error_msg);

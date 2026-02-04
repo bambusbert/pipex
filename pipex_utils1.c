@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/04 17:02:55 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/04 17:34:27 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ char	*absolute_path_helper(char **strs)
 	if (access(strs[0], F_OK) == -1)
 		free2d_and_error_exit(strs, strs[0], 127);
 	if (access(strs[0], X_OK) == -1)
-		free2d_and_error_exit(strs, "command not executable", 126);
+		free2d_and_error_exit(strs, strs[0], 126);
 	return (ft_strdup(strs[0]));
 }
 
