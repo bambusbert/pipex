@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2025/12/19 14:24:33 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/04 16:56:25 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void		do_execve_stuff(char *str, char **envp);
 char		*extract_pathvar_from_envp(char **envp);
 char		*extract_path_from_pathvar(char *path_var, char **strs);
 void		free_2d(char **strs);
-void		error_exit(char *error_msg, int status);
+void		error_exit(char *error_msg, int status, int free_msg);
 char		*check_single_path(char *path, char **paths, char *cmd);
 void		child_cmd_1(t_pipex *pipex);
 void		child_cmd_2(t_pipex *pipex);

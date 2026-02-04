@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/04 15:27:24 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/04 16:57:05 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ void	do_execve_stuff(char *str, char **envp)
 	path_var = extract_pathvar_from_envp(envp);
 	strs = ft_split(str, ' ');
 	if (!strs)
-		error_exit("Error while extracting pathvar from envp", EXIT_FAILURE);
+		error_exit("Error DEFINE BETTER", EXIT_FAILURE, 0);
 	if (!strs[0])
-		free2d_and_error_exit(strs, "command not found", 127);
+		free2d_and_error_exit(strs, "", 127);
 	path = extract_path_from_pathvar(path_var, strs);
 	if (!path)
 		free2d_and_error_exit(strs, "Error in do_execve_stuff", 127);
@@ -54,7 +54,7 @@ char	*extract_path_from_pathvar(char *path_var, char **strs)
 	if (ft_strchr(strs[0], '/'))
 		return (absolute_path_helper(strs));
 	if (path_var == NULL)
-		free2d_and_error_exit(strs, "command not found", 127);
+		free2d_and_error_exit(strs, strs[0], 127);
 	paths = ft_split(path_var, ':');
 	if (!paths)
 		free2d_and_error_exit(strs,
@@ -68,20 +68,24 @@ char	*extract_path_from_pathvar(char *path_var, char **strs)
 			return (checked_path);
 	}
 	free_2d(paths);
-	free2d_and_error_exit(strs, "command not found", 127);
+	free2d_and_error_exit(strs, strs[0], 127);
 	return (NULL);
 }
 
 void	free2d_and_error_exit(char **arr, char *error_msg, int status)
 {
+	char *copy = ft_strdup(error_msg);
+	if (!copy)
+		error_exit("Malloc Failure inside free2d_and_error_exit", EXIT_FAILURE, 0);
 	free_2d(arr);
-	error_exit(error_msg, status);
+	error_exit(copy, status, 1);
+	//FREEEE
 }
 
 char	*absolute_path_helper(char **strs)
 {
 	if (access(strs[0], F_OK) == -1)
-		free2d_and_error_exit(strs, "command not found", 127);
+		free2d_and_error_exit(strs, strs[0], 127);
 	if (access(strs[0], X_OK) == -1)
 		free2d_and_error_exit(strs, "command not executable", 126);
 	return (ft_strdup(strs[0]));

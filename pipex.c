@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/04 15:29:32 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/04 16:59:52 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,13 +89,23 @@ void	child_cmd_2(t_pipex *pipex)
 	do_execve_stuff(pipex->argv[3], pipex->envp);
 }
 
-void	error_exit(char *error_msg, int status)
+void	error_exit(char *error_msg, int status, int free_msg)
 {
 	if (status == 127)
-		errno = ENOENT;
-	else if (status == 126)
+	{
+		ft_putstr_fd("command not found: ", STDERR_FILENO);
+		if (error_msg)
+			ft_putstr_fd(error_msg, STDERR_FILENO);
+		ft_putstr_fd("\n", STDERR_FILENO);
+		if (free_msg)
+			 free(error_msg);
+		exit(status);
+	}
+	if (status == 126)
 		errno = EACCES;
 	perror(error_msg);
+	if (free_msg)
+		free(error_msg);
 	exit(status);
 }
 
