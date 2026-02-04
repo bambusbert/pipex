@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/04 16:57:05 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/04 17:02:55 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void	free2d_and_error_exit(char **arr, char *error_msg, int status)
 		error_exit("Malloc Failure inside free2d_and_error_exit", EXIT_FAILURE, 0);
 	free_2d(arr);
 	error_exit(copy, status, 1);
-	//FREEEE
 }
 
 char	*absolute_path_helper(char **strs)

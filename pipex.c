@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/04 16:59:52 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/04 17:24:25 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,16 @@ void	child_cmd_2(t_pipex *pipex)
 	do_execve_stuff(pipex->argv[3], pipex->envp);
 }
 
+//error message for 127 is "command not found: " or "no such file or directory: "
 void	error_exit(char *error_msg, int status, int free_msg)
 {
 	if (status == 127)
 	{
-		ft_putstr_fd("command not found: ", STDERR_FILENO);
+		//if there is a slash "/" in the error message, it is no such file or directory: 
+		if (error_msg[0] == '/')
+			ft_putstr_fd("no such file or directory: ", STDERR_FILENO);
+		else
+			ft_putstr_fd("command not found: ", STDERR_FILENO);
 		if (error_msg)
 			ft_putstr_fd(error_msg, STDERR_FILENO);
 		ft_putstr_fd("\n", STDERR_FILENO);
