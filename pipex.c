@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/04 17:46:42 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/04 17:55:38 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	child_cmd_2(t_pipex *pipex)
 			0644);
 	if (pipex->fd_outfile < 0)
 		clean_exit("outfile error", pipex->fd, -1);
+		//TODO ändern, "zsh: no such file or directory: /proc/self/fds/1"
 	if (dup2(pipex->fd[0], STDIN_FILENO) < 0)
 		clean_exit("dup2 pipe error", pipex->fd, pipex->fd_outfile);
 	if (dup2(pipex->fd_outfile, STDOUT_FILENO) < 0)
