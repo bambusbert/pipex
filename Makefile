@@ -6,7 +6,7 @@
 #    By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/11 13:28:23 by slambert          #+#    #+#              #
-#    Updated: 2026/02/03 10:27:07 by slambert         ###   ########.fr        #
+#    Updated: 2026/02/03 12:16:34 by slambert         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ BONUS_OBJS = $(BONUS_SRC:.c=.o)
 
 CC = cc
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 INCLUDE = -I .
 
 LIBFT_PATH = libft

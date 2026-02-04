@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/03 11:47:32 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/04 15:27:24 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	do_execve_stuff(char *str, char **envp)
 
 	path_var = extract_pathvar_from_envp(envp);
 	strs = ft_split(str, ' ');
+	if (!strs)
+		error_exit("Error while extracting pathvar from envp", EXIT_FAILURE);
 	if (!strs[0])
 		free2d_and_error_exit(strs, "command not found", 127);
 	path = extract_path_from_pathvar(path_var, strs);
