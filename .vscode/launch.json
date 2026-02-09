@@ -8,7 +8,8 @@
             "program": "${workspaceFolder}/pipex",
             //"args": ["file1.txt", "grep rtt", "wc -l", "file2.txt"],
             //"args": ["Makefile", " ", " ", "outf"],
-            "args": ["Makefile", "c1", "c2", "outf"],
+            //"args": ["Makefile", "c1", "c2", "outf"],
+            "args": ["file2.txt", "ls -l", "wc -l", "lgkkgjkgh"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
@@ -23,8 +24,8 @@
                 ,
                 {
                     "description": "Follow child after fork",
-                    //"text": "set follow-fork-mode child",
-                    "text": "set follow-fork-mode parent",
+                    "text": "set follow-fork-mode child",
+                    //"text": "set follow-fork-mode parent",
                     "ignoreFailures": false
                 }
             ],

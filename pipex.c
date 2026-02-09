@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/04 17:55:38 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/09 12:37:55 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@ int	main(int argc, char **argv, char **envp)
 			 <cmd1> <cmd2> ... <cmd_n> <file2>", EXIT_FAILURE);
 	init_struct(&pipex, argc, argv, envp);
 	if (pipe(pipex.fd) == -1)
-		clean_exit("pipe returned -1", pipex.fd, 1);
+		clean_exit2("pipe returned -1", NULL, pipex.fd, 1);
 	pipex.pid1 = fork();
 	if (pipex.pid1 < 0)
-		clean_exit("first fork failed", pipex.fd, 1);
+		clean_exit2("first fork failed", NULL, pipex.fd, 1);
 	if (pipex.pid1 == 0)
 		child_cmd_1(&pipex);
 	pipex.pid2 = fork();
 	if (pipex.pid2 < 0)
-		clean_exit("second fork failed", pipex.fd, 1);
+		clean_exit2("second fork failed", NULL, pipex.fd, 1);
 	if (pipex.pid2 == 0)
 		child_cmd_2(&pipex);
 	close(pipex.fd[0]);
@@ -54,11 +54,15 @@ void	child_cmd_1(t_pipex *pipex)
 {
 	pipex->fd_infile = open(pipex->argv[1], O_RDONLY);
 	if (pipex->fd_infile < 0)
-		clean_exit("infile error", pipex->fd, -1);
+	{
+		if (errno == EACCES)
+			clean_exit2("permission denied", pipex->argv[1], pipex->fd, -1);
+		clean_exit2("no such file or directory", pipex->argv[1], pipex->fd, -1);
+	}
 	if (dup2(pipex->fd_infile, STDIN_FILENO) < 0)
-		clean_exit("dup2 infile error", pipex->fd, pipex->fd_infile);
+		clean_exit2("dup2 infile error", NULL, pipex->fd, pipex->fd_infile);
 	if (dup2(pipex->fd[1], STDOUT_FILENO) < 0)
-		clean_exit("dup2 pipe error", pipex->fd, pipex->fd_infile);
+		clean_exit2("dup2 pipe error", NULL, pipex->fd, pipex->fd_infile);
 	close(pipex->fd_infile);
 	close(pipex->fd[0]);
 	close(pipex->fd[1]);
@@ -78,12 +82,12 @@ void	child_cmd_2(t_pipex *pipex)
 	pipex->fd_outfile = open(pipex->argv[4], O_WRONLY | O_CREAT | O_TRUNC,
 			0644);
 	if (pipex->fd_outfile < 0)
-		clean_exit("outfile error", pipex->fd, -1);
+		clean_exit2("outfile error", NULL, pipex->fd, -1);
 		//TODO ändern, "zsh: no such file or directory: /proc/self/fds/1"
 	if (dup2(pipex->fd[0], STDIN_FILENO) < 0)
-		clean_exit("dup2 pipe error", pipex->fd, pipex->fd_outfile);
+		clean_exit2("dup2 pipe error", NULL, pipex->fd, pipex->fd_outfile);
 	if (dup2(pipex->fd_outfile, STDOUT_FILENO) < 0)
-		clean_exit("dup2 outfile error", pipex->fd, pipex->fd_outfile);
+		clean_exit2("dup2 outfile error", NULL, pipex->fd, pipex->fd_outfile);
 	close(pipex->fd_outfile);
 	close(pipex->fd[0]);
 	close(pipex->fd[1]);
@@ -121,7 +125,7 @@ void	error_exit(char *error_msg, int status, int free_msg)
 	exit(status);
 }
 
-void	clean_exit(char *msg, int *p_fd, int file_fd)
+void	clean_exit2(char *base_msg, char *detail, int *p_fd, int file_fd)
 {
 	if (p_fd)
 	{
@@ -132,6 +136,12 @@ void	clean_exit(char *msg, int *p_fd, int file_fd)
 	}
 	if (file_fd != -1)
 		close(file_fd);
-	perror(msg);
+	ft_putstr_fd(base_msg,STDERR_FILENO);
+	if (detail)
+	{
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(detail, STDERR_FILENO);
+	}
+	ft_putstr_fd("\n", STDERR_FILENO);
 	exit(EXIT_FAILURE);
 }
