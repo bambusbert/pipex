@@ -6,13 +6,13 @@
 #    By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/11 13:28:23 by slambert          #+#    #+#              #
-#    Updated: 2026/02/09 12:26:20 by slambert         ###   ########.fr        #
+#    Updated: 2026/02/09 13:32:34 by slambert         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
-SRC =	pipex.c pipex_utils1.c pipex_utils2.c
+SRC =	pipex.c pipex_utils1.c pipex_utils2.c pipex_utils3.c
 BONUS_SRC = pipex_bonus.c pipex_utils1_bonus.c pipex_utils2_bonus.c pipex_utils3_bonus.c
 
 OBJS = ${SRC:.c=.o}

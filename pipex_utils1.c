@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:33 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/04 17:34:27 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/09 13:37:02 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,12 @@ char	*extract_path_from_pathvar(char *path_var, char **strs)
 
 void	free2d_and_error_exit(char **arr, char *error_msg, int status)
 {
-	char *copy = ft_strdup(error_msg);
+	char	*copy;
+
+	copy = ft_strdup(error_msg);
 	if (!copy)
-		error_exit("Malloc Failure inside free2d_and_error_exit", EXIT_FAILURE, 0);
+		error_exit("Malloc Failure inside free2d_and_error_exit",
+			EXIT_FAILURE, 0);
 	free_2d(arr);
 	error_exit(copy, status, 1);
 }
@@ -97,7 +100,8 @@ char	*check_single_path(char *path, char **paths, char *cmd)
 
 	path_with_slash = ft_strjoin(path, "/");
 	if (!path_with_slash)
-		free2d_and_error_exit(paths, "error in extract_path_from_pathvar, \
+		free2d_and_error_exit(paths,
+			"error in extract_path_from_pathvar, \
 			ft_strjoin failed", EXIT_FAILURE);
 	path_to_check = ft_strjoin(path_with_slash, cmd);
 	free(path_with_slash);

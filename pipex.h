@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/09 12:12:04 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/09 13:30:58 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,13 @@ char		*extract_pathvar_from_envp(char **envp);
 char		*extract_path_from_pathvar(char *path_var, char **strs);
 void		free_2d(char **strs);
 void		error_exit(char *error_msg, int status, int free_msg);
+void		error_126(char *error_msg, int status, int free_msg);
+void		error_127(char *error_msg, int status, int free_msg);
 char		*check_single_path(char *path, char **paths, char *cmd);
 void		child_cmd_1(t_pipex *pipex);
 void		child_cmd_2(t_pipex *pipex);
 char		*absolute_path_helper(char **strs);
-void	clean_exit2(char *base_msg, char *detail, int *p_fd, int file_fd);
-// TODO REMOVE
+void		clean_exit(char *base_msg, char *detail, int *p_fd, int file_fd);
 int			return_handler(int pid1, int pid2);
 void		custom_error(char *msg, int status);
 void		free2d_and_error_exit(char **arr, char *error_msg, int status);
