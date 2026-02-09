@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:17 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/09 12:41:27 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/09 12:57:13 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ void	child_cmd_1(t_pipex *pipex)
 	pipex->fd_infile = open(pipex->argv[1], O_RDONLY);
 	if (pipex->fd_infile < 0)
 	{
+		if (errno == EISDIR)
+			clean_exit2("is a directory", pipex->argv[1], pipex->fd, -1);
 		if (errno == EACCES)
 			clean_exit2("permission denied", pipex->argv[1], pipex->fd, -1);
 		clean_exit2("no such file or directory", pipex->argv[1], pipex->fd, -1);
@@ -81,19 +83,14 @@ void	child_cmd_2(t_pipex *pipex)
 {
 	pipex->fd_outfile = open(pipex->argv[4], O_WRONLY | O_CREAT | O_TRUNC,
 			0644);
-
-			
-	// if (pipex->fd_outfile < 0)
-	// 	clean_exit2("outfile error", NULL, pipex->fd, -1);
-	// 	//TODO ändern, "zsh: no such file or directory: /proc/self/fds/1"
 	if (pipex->fd_outfile < 0)
 	{
+		if (errno == EISDIR)
+			clean_exit2("is a directory", pipex->argv[4], pipex->fd, -1);
 		if (errno == EACCES)
 			clean_exit2("permission denied", pipex->argv[4], pipex->fd, -1);
 		clean_exit2("no such file or directory", pipex->argv[4], pipex->fd, -1);
 	}
-
-		
 	if (dup2(pipex->fd[0], STDIN_FILENO) < 0)
 		clean_exit2("dup2 pipe error", NULL, pipex->fd, pipex->fd_outfile);
 	if (dup2(pipex->fd_outfile, STDOUT_FILENO) < 0)
