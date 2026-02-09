@@ -6,7 +6,7 @@
 /*   By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 12:51:42 by slambert          #+#    #+#             */
-/*   Updated: 2026/02/09 13:30:58 by slambert         ###   ########.fr       */
+/*   Updated: 2026/02/09 14:31:03 by slambert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@
 # include "libft/libft.h"
 # include <errno.h>
 # include <stdio.h>
-# include <string.h>
 # include <sys/wait.h>
-# include <unistd.h>
 
 typedef struct s_pipex
 {

@@ -24,6 +24,7 @@ This is an implementation of the project "pipex" of 42 school. Its goal is to si
 - Limitations of this implementation:
 here_doc, <<, and >> redirections are not supported and are intentionally left out of this version.
 ​
+- use with zsh shell
 
 **Resources**
 

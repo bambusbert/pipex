@@ -6,21 +6,22 @@
 #    By: slambert <slambert@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/11 13:28:23 by slambert          #+#    #+#              #
-#    Updated: 2026/02/09 13:32:34 by slambert         ###   ########.fr        #
+#    Updated: 2026/02/09 14:27:01 by slambert         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
 SRC =	pipex.c pipex_utils1.c pipex_utils2.c pipex_utils3.c
-BONUS_SRC = pipex_bonus.c pipex_utils1_bonus.c pipex_utils2_bonus.c pipex_utils3_bonus.c
+BONUS_SRC = pipex_bonus.c pipex_utils1_bonus.c pipex_utils2_bonus.c \
+			pipex_utils3_bonus.c
 
 OBJS = ${SRC:.c=.o}
 BONUS_OBJS = $(BONUS_SRC:.c=.o)
 
 CC = cc
 RM = rm -f
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 INCLUDE = -I .
 
 LIBFT_PATH = libft
